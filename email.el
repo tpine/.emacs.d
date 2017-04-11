@@ -9,7 +9,11 @@
 	mail-specify-envelope-from t
 	message-sendmail-envelope-from 'header
 	mail-envelope-from 'header
-	notmuch-address-command 'internal))
+	notmuch-address-command 'internal)
+  (add-hook 'notmuch-message-mode-hook 'flyspell-mode)
+  (add-hook 'notmuch-message-mode-hook 'flyspell-buffer))
+
+
 
 (provide 'email)
 ;;; email.el ends here
