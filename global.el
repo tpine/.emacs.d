@@ -9,6 +9,10 @@
   :ensure t
   :init (global-flycheck-mode))
 
+(use-package ivy
+  :ensure t
+  :init (ivy-mode 1))
+
 (use-package magit
   :ensure t
   :bind (("C-c m" . magit-status)))
