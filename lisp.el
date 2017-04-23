@@ -7,11 +7,6 @@
 ;;; Add .lsp files to lisp-mode
 (add-to-list 'auto-mode-alist '("\\.lsp" . lisp-mode))
 
-;; Rainbow Delimeters
-;; (require 'rainbow-delimiters)
-;; ;; Enables rainbow-delimiters-mode in Emacs Lisp buffers
-;; (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
-
 (use-package rainbow-delimiters
   :ensure t
   :init
