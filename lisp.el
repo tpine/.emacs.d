@@ -6,7 +6,6 @@
 
 ;;; Add .lsp files to lisp-mode
 (add-to-list 'auto-mode-alist '("\\.lsp" . lisp-mode))
-(add-to-list 'auto-mode-alist '("\\.stumpwmrc" . lisp-mode))
 
 ;; Rainbow Delimeters
 ;; (require 'rainbow-delimiters)
@@ -44,8 +43,5 @@
   (add-hook 'slime-repl-mode-hook       #'enable-paredit-mode)
   (add-hook 'slime-repl-mode-hook 'rainbow-delimiters-mode))
 
-;;; Stumpwmrc
-;; (require 'stumpwm-mode)
-;; (add-to-list 'auto-mode-alist '(".stumpwmrc'" . stumpwm-mode))
 (provide 'lisp)
 ;;; lisp.el ends here
