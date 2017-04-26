@@ -7,8 +7,14 @@
 ;;; Add .lsp files to lisp-mode
 (add-to-list 'auto-mode-alist '("\\.lsp" . lisp-mode))
 
+(defun connect-to-stumpwm ()
+  "Connect to stumpwm on localhost port 4004."
+  (interactive)
+  (sly-connect "127.0.0.1" 4004))
+
 (use-package sly
   :ensure t
+  :bind (("C-c s" . connect-to-stumpwm))
   :config
   (setq inferior-lisp-program "sbcl")
   (setq sly-auto-start 'ask))
