@@ -22,19 +22,19 @@
 (use-package rainbow-delimiters
   :ensure t
   :init
-  (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
-  (add-hook 'lisp-mode-hook #'rainbow-delimiters-mode)
-  (add-hook 'sly-mrepl-mode-hook #'rainbow-delimiters-mode))
+  (add-hooks 'rainbow-delimiters-mode '(emacs-lisp-mode-hook
+					lisp-mode-hook
+					sly-mrepl-mode-hook)))
 
 (use-package paredit
   :ensure t
   :init
-  (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
-  (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-  (add-hook 'ielm-mode-hook #'enable-paredit-mode)
-  (add-hook 'lisp-mode-hook #'enable-paredit-mode)
-  (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-  (add-hook 'sly-mrepl-mode-hook #'enable-paredit-mode))
+  (add-hooks 'enable-paredit-mode '(emacs-lisp-mode-hook
+				    eval-expression-minibuffer-setup-hook
+				    ielm-mode-hook
+				    lisp-mode-hook
+				    lisp-interaction-mode-hook
+				    sly-mrepl-mode-hook)))
 
 (provide 'lisp)
 ;;; lisp.el ends here

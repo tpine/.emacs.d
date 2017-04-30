@@ -42,6 +42,12 @@
 
 (require 'use-package)
 
+;;; Utility Functions
+(defun add-hooks (fn hooks)
+  "Call 'add-hook' adding FN as hook for all HOOKS."
+  (dolist (hook hooks)
+    (add-hook hook fn)))
+
 ;;; Further config is here
 
 ;;; User Interface changes
