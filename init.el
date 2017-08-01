@@ -62,6 +62,8 @@
 (load-file "~/.emacs.d/org.el")
 ;;; email config
 (load-file "~/.emacs.d/email.el")
+;;; web development config
+(load-file "~/.emacs.d/web.el")
 
 ;;; TODO: Decide if needed can probably be removed for a cleaner option
 ;;; Fill Column Indicator
