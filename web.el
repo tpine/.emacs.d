@@ -27,10 +27,27 @@
     (add-hook 'js2-mode-hook 'company-mode)
     (add-hook 'js2-mode-hook 'rainbow-delimiters-mode)))
 
-(use-package company-tern
+(use-package js2-refactor
   :ensure t
   :init
-  (add-to-list 'company-backends 'company-tern))
+  (progn
+    (add-hook 'js2-mode-hook #'js2-refactor-mode)
+    (js2r-add-keybindings-with-prefix "C-c C-r")
+    (define-key js2-mode-map (kbd "C-k") #'js2r-kill)))
+
+(use-package xref-js2
+  :ensure t
+  :init
+  (progn
+    (define-key js-mode-map (kbd "M-.") nil)
+    (add-hook 'js2-mode-hook
+	      (lambda ()
+		(add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t))))
+
+  (use-package company-tern
+    :ensure t
+    :init
+    (add-to-list 'company-backends 'company-tern)))
 
 (provide 'web)
 ;;; web.el ends here
