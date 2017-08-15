@@ -65,11 +65,6 @@
 ;;; web development config
 (load-file "~/.emacs.d/web.el")
 
-;;; TODO: Decide if needed can probably be removed for a cleaner option
-;;; Fill Column Indicator
-;; Only load for languages with a defined style guide of 80 char lines
-(require 'fill-column-indicator)
-(add-hook 'python-mode-hook 'fci-mode)
 (put 'downcase-region 'disabled nil)
 (put 'erase-buffer 'disabled nil)
 
