@@ -15,6 +15,8 @@
 
 (use-package smartparens
   :ensure t
+  :bind (("C-<right>" . sp-forward-slurp-sexp)
+	 ("C-<left>" . sp-forward-barf-sexp))
   :init
   (use-package smartparens-config)
   (smartparens-global-mode 1))
@@ -48,6 +50,23 @@
     :ensure t
     :init
     (add-to-list 'company-backends 'company-tern)))
+
+(use-package php-mode
+  :ensure t
+  :init
+  (progn
+    (use-package ac-php
+      :ensure t)
+    (use-package company-php
+      :ensure t)
+     (ac-php-core-eldoc-setup)
+     (make-local-variable 'company-backends)
+     (add-to-list 'company-backends 'company-ac-php-backend)))
+
+(use-package web-mode
+  :ensure t
+  :init
+  (add-to-list 'auto-mode-alist '("\\.ctp\\'" . web-mode)))
 
 (provide 'web)
 ;;; web.el ends here
