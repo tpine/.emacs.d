@@ -52,8 +52,6 @@
 
 ;;; User Interface changes
 (load-file "~/.emacs.d/ui.el")
-;;; Global changes to emacs
-(load-file "~/.emacs.d/global.el")
 ;;; Lisp Config
 (load-file "~/.emacs.d/lisp.el")
 ;;; Latex Config
@@ -64,9 +62,12 @@
 (load-file "~/.emacs.d/email.el")
 ;;; web development config
 (load-file "~/.emacs.d/web.el")
+;;; Global changes to emacs
+(load-file "~/.emacs.d/global.el")
 
 (put 'downcase-region 'disabled nil)
 (put 'erase-buffer 'disabled nil)
+(put 'upcase-region 'disabled nil)
 
 (provide 'init.el)
 ;;; init.el ends here
