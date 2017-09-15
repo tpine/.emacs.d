@@ -19,13 +19,6 @@
   (setq inferior-lisp-program "sbcl")
   (setq sly-auto-start 'ask))
 
-(use-package rainbow-delimiters
-  :ensure t
-  :init
-  (add-hooks 'rainbow-delimiters-mode '(emacs-lisp-mode-hook
-					lisp-mode-hook
-					sly-mrepl-mode-hook)))
-
 (use-package paredit
   :ensure t
   :init

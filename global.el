@@ -30,5 +30,14 @@
   :bind (("C-=" . er/expand-region)
 	 ("C--" . er/contract-region)))
 
+(use-package rainbow-delimiters
+  :ensure t
+  :init
+  (add-hooks 'rainbow-delimiters-mode '(emacs-lisp-mode-hook
+					lisp-mode-hook
+					sly-mrepl-mode-hook
+					php-mode-hook)))
+
+
 (provide 'global)
 ;;; global.el ends here
