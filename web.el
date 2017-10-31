@@ -27,7 +27,13 @@
   (progn
     (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
     (add-hook 'js2-mode-hook 'company-mode)
-    (add-hook 'js2-mode-hook 'rainbow-delimiters-mode)))
+    (add-hook 'js2-mode-hook 'rainbow-delimiters-mode)
+    (add-hook 'js2-mode-hook (lambda () (setq indent-tabs-mode nil))))
+  :config
+  (progn
+    (setq js2-mode-show-parse-errors nil)
+    (setq js2-mode-show-strict-warnings nil)
+    (setq flycheck-javascript-standard-executable "semistandard")))
 
 (use-package js2-refactor
   :ensure t
