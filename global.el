@@ -38,6 +38,11 @@
 					sly-mrepl-mode-hook
 					php-mode-hook)))
 
+(use-package undo-tree
+  :ensure t
+  :init
+  (global-undo-tree-mode))
+
 
 (provide 'global)
 ;;; global.el ends here
