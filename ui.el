@@ -28,7 +28,7 @@
   
 (use-package nyan-mode
   :ensure t
-  :config
+  :init
   ;; Fix up Nyan Cat cause she's pretty
   (setq nyan-animate-nyancat t
 	nyan-wavy-trail t)
