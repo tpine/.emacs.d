@@ -8,8 +8,8 @@
   :ensure t
   :config
   ;; Set global todo list
-  (setq org-agenda-files (list "~/org/school.org"
-			       "~/org/home.org")
+  (setq org-agenda-files (list "~/org/home.org")
+	org-todo-keywords '((sequence "TODO" "|" "DONE" "CANCELED"))
 	org-enforce-todo-dependencies t))
 
 (use-package elfeed
