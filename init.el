@@ -42,6 +42,12 @@
 
 (require 'use-package)
 
+(use-package exec-path-from-shell
+  :ensure t)
+
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
+
 ;;; Utility Functions
 (defun add-hooks (fn hooks)
   "Call 'add-hook' adding FN as hook for all HOOKS."
@@ -52,8 +58,6 @@
 
 ;;; User Interface changes
 (load-file "~/.emacs.d/ui.el")
-;;; Global changes to emacs
-(load-file "~/.emacs.d/global.el")
 ;;; Lisp Config
 (load-file "~/.emacs.d/lisp.el")
 ;;; Latex Config
@@ -64,14 +68,12 @@
 (load-file "~/.emacs.d/email.el")
 ;;; web development config
 (load-file "~/.emacs.d/web.el")
+;;; Global changes to emacs
+(load-file "~/.emacs.d/global.el")
 
-;;; TODO: Decide if needed can probably be removed for a cleaner option
-;;; Fill Column Indicator
-;; Only load for languages with a defined style guide of 80 char lines
-(require 'fill-column-indicator)
-(add-hook 'python-mode-hook 'fci-mode)
 (put 'downcase-region 'disabled nil)
 (put 'erase-buffer 'disabled nil)
+(put 'upcase-region 'disabled nil)
 
 (provide 'init.el)
 ;;; init.el ends here
