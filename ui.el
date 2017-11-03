@@ -34,14 +34,6 @@
 	nyan-wavy-trail t)
   (nyan-mode))
 
-  ;;; Add powerline
-  (use-package powerline
-    :ensure t
-    :config (powerline-default-theme))
-
-  (use-package spaceline-config
-    :ensure spaceline
-    :config (spaceline-spacemacs-theme))
 
 (provide 'ui)
 ;;; ui.el ends here
