@@ -34,6 +34,9 @@
 	nyan-wavy-trail t)
   (nyan-mode))
 
+;;; Setup Zone for 5min
+;;; That gives us 5min of zone before screen turns off
+(zone-when-idle 300)
 
 (provide 'ui)
 ;;; ui.el ends here
