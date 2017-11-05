@@ -43,6 +43,13 @@
   :init
   (global-undo-tree-mode))
 
+(use-package yasnippet
+  :ensure t
+  :config
+  (progn
+    (use-package yasnippet-snippets
+      :ensure t)
+    (yas-global-mode 1)))
 
 (provide 'global)
 ;;; global.el ends here
