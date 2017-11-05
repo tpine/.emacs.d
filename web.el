@@ -72,7 +72,9 @@
 (use-package web-mode
   :ensure t
   :init
-  (add-to-list 'auto-mode-alist '("\\.ctp\\'" . web-mode)))
+  (progn
+    (add-to-list 'auto-mode-alist '("\\.ctp\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))))
 
 (provide 'web)
 ;;; web.el ends here
