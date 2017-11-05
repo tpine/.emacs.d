@@ -18,14 +18,33 @@
 (scroll-bar-mode -1)
 (custom-set-variables '(custom-safe-themes t))
 
-(use-package spacemacs-theme
+(use-package doom-themes
   :ensure t
-  :config
-  (custom-set-variables '(custom-enabled-themes '(spacemacs-dark))))
+  :init
+  (progn 
+    (require 'doom-themes)
 
-;;; Doesn't work in above use-package
-(load-theme 'spacemacs-dark t)
-  
+    ;; Global settings (defaults)
+    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+	  doom-themes-enable-italic t
+	  doom-vibrant-brighter-modeline t
+	  doom-vibrant-brighter-comment t
+	  doom-vibrant-comment-bg t) ; if nil, italics is universally disabled
+
+
+    ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
+    ;; may have their own settings.
+    (load-theme 'doom-vibrant t)
+
+    ;; Enable flashing mode-line on errors
+    (doom-themes-visual-bell-config)
+
+    ;; Enable custom neotree theme
+    (doom-themes-neotree-config)  ; all-the-icons fonts must be installed!
+
+    ;; Corrects (and improves) org-mode's native fontification.
+    (doom-themes-org-config)))
+
 (use-package nyan-mode
   :ensure t
   :init
@@ -36,7 +55,27 @@
 
 ;;; Setup Zone for 5min
 ;;; That gives us 5min of zone before screen turns off
+(require 'zone)
 (zone-when-idle 300)
+
+(use-package airline-themes
+  :ensure t
+  :init
+  (progn
+    (require 'airline-themes)
+    (load-theme 'airline-doom-one)))
+
+(setq inhibit-startup-screen t
+      initial-major-mode 'org-mode
+      initial-buffer-choice "~/org/global.org"
+      initial-scratch-message "\
+* Notes
+- This is a initial scratch buffer
+- Buffer is set to org mode
+- Run snippetts like a iPython Notebook using org-bable
+
+")
+
 
 (provide 'ui)
 ;;; ui.el ends here

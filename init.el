@@ -13,7 +13,7 @@
  '(custom-safe-themes t)
  '(package-selected-packages
    (quote
-    (notmuch org slime wanderlust nyan-mode markdown-mode markdown-mode+ markdown-preview-eww stumpwm-mode magit flycheck flycheck-cython flycheck-pyflakes flycheck-rust powerline spaceline auctex auctex-latexmk auctex-lua web-mode rust-mode rainbow-delimiters polymode paredit inflections fill-column-indicator enh-ruby-mode autopair)))
+    (airline-themes doom-themes darktooth-theme yasnippet-snippets yasnippets ob-mongo ob-php company-php ac-php notmuch org slime wanderlust nyan-mode markdown-mode markdown-mode+ markdown-preview-eww stumpwm-mode magit flycheck flycheck-cython flycheck-pyflakes flycheck-rust powerline spaceline auctex auctex-latexmk auctex-lua web-mode rust-mode rainbow-delimiters polymode paredit inflections fill-column-indicator enh-ruby-mode autopair)))
  '(send-mail-function (quote sendmail-send-it)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
