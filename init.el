@@ -56,8 +56,6 @@
 
 ;;; Further config is here
 
-;;; User Interface changes
-(load-file "~/.emacs.d/ui.el")
 ;;; Lisp Config
 (load-file "~/.emacs.d/lisp.el")
 ;;; Latex Config
@@ -70,6 +68,8 @@
 (load-file "~/.emacs.d/web.el")
 ;;; Global changes to emacs
 (load-file "~/.emacs.d/global.el")
+;;; User Interface changes
+(load-file "~/.emacs.d/ui.el")
 
 (put 'downcase-region 'disabled nil)
 (put 'erase-buffer 'disabled nil)
