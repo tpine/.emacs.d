@@ -6,7 +6,7 @@
 
 (use-package org
   :ensure t
-  :config
+  :init
   ;; Set global todo list
   (progn
     ;; active Babel languages
@@ -31,7 +31,7 @@
 
 (use-package elfeed-org
   :ensure t
-  :config
+  :init
   (elfeed-org)
   (setq rmh-elfeed-org-files (list "~/org/feeds.org")))
 
