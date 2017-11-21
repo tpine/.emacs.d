@@ -27,9 +27,8 @@
     ;; Global settings (defaults)
     (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
 	  doom-themes-enable-italic t
-	  doom-vibrant-brighter-modeline t
-	  doom-vibrant-brighter-comment t
-	  doom-vibrant-comment-bg t) ; if nil, italics is universally disabled
+	  doom-vibrant-brighter-modeline nil
+	  org-hide-leading-stars nil) ; if nil, italics is universally disabled
 
 
     ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
@@ -57,13 +56,6 @@
 ;;; That gives us 5min of zone before screen turns off
 (require 'zone)
 (zone-when-idle 300)
-
-(use-package airline-themes
-  :ensure t
-  :init
-  (progn
-    (require 'airline-themes)
-    (load-theme 'airline-doom-one)))
 
 (setq inhibit-startup-screen t
       initial-major-mode 'org-mode
