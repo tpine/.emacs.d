@@ -30,6 +30,11 @@
   :bind (("C-=" . er/expand-region)
 	 ("C--" . er/contract-region)))
 
+(use-package move-text
+  :ensure t
+  :bind (("M-<up>" . move-text-up)
+	 ("M-<down>" . move-text-down)))
+
 (use-package rainbow-delimiters
   :ensure t
   :init
