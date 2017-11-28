@@ -17,6 +17,7 @@
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (custom-set-variables '(custom-safe-themes t))
+(diminish 'abbrev-mode)
 
 (use-package doom-themes
   :ensure t

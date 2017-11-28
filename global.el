@@ -11,6 +11,7 @@
 
 (use-package ivy
   :ensure t
+  :diminish ivy-mode
   :init (ivy-mode 1))
 
 (use-package counsel
@@ -45,11 +46,13 @@
 
 (use-package undo-tree
   :ensure t
+  :diminish undo-tree-mode
   :init
   (global-undo-tree-mode))
 
 (use-package yasnippet
   :ensure t
+  :diminish yas-minor-mode
   :config
   (progn
     (use-package yasnippet-snippets
