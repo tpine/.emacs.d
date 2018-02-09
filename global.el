@@ -59,5 +59,12 @@
       :ensure t)
     (yas-global-mode 1)))
 
+(use-package avy
+  :bind (("C-:" . avy-goto-char)
+	 ("C-'" . avy-goto-char-2)
+	 ("M-g f" . avy-goto-line)
+	 ("M-g w" . avy-goto-word-1))
+  :init (avy-setup-default))
+
 (provide 'global)
 ;;; global.el ends here
