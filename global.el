@@ -11,6 +11,8 @@
 
 (use-package ivy
   :ensure t
+  :bind (("C-s" . swiper)
+	 ("C-S-s" . isearch-forward))
   :diminish ivy-mode
   :init (ivy-mode 1))
 
