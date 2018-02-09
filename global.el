@@ -66,5 +66,8 @@
 	 ("M-g w" . avy-goto-word-1))
   :init (avy-setup-default))
 
+(use-package ace-window
+  :bind (("M-p" . ace-window)))
+
 (provide 'global)
 ;;; global.el ends here
