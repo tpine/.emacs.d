@@ -67,7 +67,8 @@
       :ensure t)
      (ac-php-core-eldoc-setup)
      (make-local-variable 'company-backends)
-     (add-to-list 'company-backends 'company-ac-php-backend)))
+     (add-to-list 'company-backends 'company-ac-php-backend)
+     (add-hook 'php-mode-hook (lambda () (setq indent-tabs-mode nil)))))
 
 (use-package web-mode
   :ensure t
