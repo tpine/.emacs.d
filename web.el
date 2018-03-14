@@ -23,6 +23,9 @@
 
 (use-package js2-mode
   :ensure t
+  :bind
+  (("C-c p" . php-mode)
+   ("C-c w" . web-mode))
   :init
   (progn
     (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
@@ -59,6 +62,9 @@
 
 (use-package php-mode
   :ensure t
+  :bind
+  (("C-c w" . web-mode)
+   ("C-c j" . js2-mode))
   :init
   (progn
     (use-package ac-php
@@ -72,6 +78,9 @@
 
 (use-package web-mode
   :ensure t
+  :bind
+  (("C-c p" . php-mode)
+   ("C-c j" . js2-mode))
   :init
   (progn
     (add-to-list 'auto-mode-alist '("\\.ctp\\'" . web-mode))
