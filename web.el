@@ -74,7 +74,17 @@
   :init
   (progn
     (add-to-list 'auto-mode-alist '("\\.ctp\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))))
+    (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
+    
+    (add-hook 'web-mode-hook (lambda ()
+			       (setq web-mode-enable-auto-pairing nil)))
+
+    (defun sp-web-mode-is-code-context (id action context)
+      (and (eq action 'insert)
+	   (not (or (get-text-property (point) 'part-side)
+		    (get-text-property (point) 'block-side)))))
+
+    (sp-local-pair 'web-mode "<" nil :when '(sp-web-mode-is-code-context))))
 
 (provide 'web)
 ;;; web.el ends here
