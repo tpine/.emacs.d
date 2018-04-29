@@ -67,13 +67,15 @@
       :ensure t)
      (ac-php-core-eldoc-setup)
      (make-local-variable 'company-backends)
-     (add-to-list 'company-backends 'company-ac-php-backend)))
+     (add-to-list 'company-backends 'company-ac-php-backend)
+     (add-hook 'php-mode-hook (lambda () (setq indent-tabs-mode nil)))))
 
 (use-package web-mode
   :ensure t
   :init
   (progn
     (add-to-list 'auto-mode-alist '("\\.ctp\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
     
     (add-hook 'web-mode-hook (lambda ()

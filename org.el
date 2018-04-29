@@ -22,7 +22,7 @@
        (mongo . t)))
     (setq org-babel-lisp-eval-fn "sly-eval")
     ;; General Org Config
-    (setq org-agenda-files (list "~/org/home.org")
+    (setq org-agenda-files (list "~/org/home.org" "~/org/work.org")
 	  org-todo-keywords '((sequence "TODO" "|" "DONE" "CANCELED"))
 	  org-enforce-todo-dependencies t)))
 

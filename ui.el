@@ -45,6 +45,12 @@
     ;; Corrects (and improves) org-mode's native fontification.
     (doom-themes-org-config)))
 
+;;; Reload ui file after creating a window to have non-terminal colors
+(add-hook 'after-make-frame-functions (lambda (frame)
+					(when (display-graphic-p frame)
+					  (enable-theme 'doom-vibrant))))
+
+
 (use-package nyan-mode
   :ensure t
   :init

@@ -11,6 +11,8 @@
 
 (use-package ivy
   :ensure t
+  :bind (("C-s" . swiper)
+	 ("C-S-s" . isearch-forward))
   :diminish ivy-mode
   :init (ivy-mode 1))
 
@@ -58,6 +60,22 @@
     (use-package yasnippet-snippets
       :ensure t)
     (yas-global-mode 1)))
+
+(use-package avy
+  :bind (("C-:" . avy-goto-char)
+	 ("C-'" . avy-goto-char-2)
+	 ("M-g f" . avy-goto-line)
+	 ("M-g w" . avy-goto-word-1))
+  :init (avy-setup-default))
+
+(use-package ace-window
+  :bind (("M-p" . ace-window)))
+
+(use-package multiple-cursors
+  :bind (("C-S-c C-S-c" . mc/edit-lines)
+	 ("C->" . mc/mark-next-like-this)
+	 ("C-<" . mc/mark-previous-like-this)
+	 ("C-c C-<" . mc/mark-all-like-this)))
 
 (provide 'global)
 ;;; global.el ends here
