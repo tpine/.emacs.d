@@ -11,7 +11,7 @@
 (c-set-offset 'comment-intro 0)
 
 ;;; UI Tweaks
-(global-linum-mode t)
+(global-display-line-numbers-mode)
 (setq column-number-mode t)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
