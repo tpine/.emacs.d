@@ -57,6 +57,11 @@
     :init
     (add-to-list 'company-backends 'company-tern)))
 
+(use-package rjsx-mode
+  :ensure t
+  :init
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . rjsx-mode)))
+
 (use-package php-mode
   :ensure t
   :init
