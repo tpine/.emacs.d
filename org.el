@@ -6,6 +6,7 @@
 
 (use-package org
   :ensure t
+  :bind (("C-c c" . org-capture))
   :init
   ;; Set global todo list
   (progn
@@ -24,7 +25,8 @@
     ;; General Org Config
     (setq org-agenda-files (list "~/org/home.org" "~/org/work.org")
 	  org-todo-keywords '((sequence "TODO" "|" "DONE" "CANCELED"))
-	  org-enforce-todo-dependencies t)))
+	  org-enforce-todo-dependencies t
+	  org-default-notes-file "~/org/global.org")))
 
 (use-package elfeed
   :ensure t)
