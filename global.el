@@ -46,6 +46,11 @@
 					sly-mrepl-mode-hook
 					php-mode-hook)))
 
+(use-package flyspell
+  :ensure t
+  :init
+  (add-hook 'text-mode-hook (lambda () (flyspell-mode 1))))
+
 (use-package undo-tree
   :ensure t
   :diminish undo-tree-mode
