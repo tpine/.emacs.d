@@ -87,6 +87,10 @@
     (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.styl\\'" . web-mode))))
+
+(use-package css-mode
+  :init (setf flycheck-scss-stylelint-executable "stylelint --config stylelint-config-recommended-scss"))
+
 (use-package enh-ruby-mode
   :ensure t
   :mode "\\.rb$")
