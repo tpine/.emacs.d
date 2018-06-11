@@ -4,6 +4,18 @@
 
 ;;; Code:
 
+;;; Node doesn't deal with autosave and backup files well
+;;; Move these to a specific directory
+(setq backup-directory-alist
+      `(("." . ,(expand-file-name
+                 (concat user-emacs-directory "backups")))))
+
+(setq auto-save-file-name-transforms
+          `((".*" ,(expand-file-name
+                    (concat user-emacs-directory "auto-save")) t)))
+;;; We also need to disable lock files
+(setq create-lockfiles nil)
+
 ;;; Add flycheck
 (use-package flycheck
   :ensure t

@@ -60,6 +60,11 @@
     :init
     (add-to-list 'company-backends 'company-tern)))
 
+(use-package rjsx-mode
+  :ensure t
+  :init
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . rjsx-mode)))
+
 (use-package php-mode
   :ensure t
   :bind
@@ -86,7 +91,16 @@
     (add-to-list 'auto-mode-alist '("\\.ctp\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.styl\\'" . web-mode))))
+    (add-to-list 'auto-mode-alist '("\\.styl\\'" . web-mode))
+    (add-hook 'web-mode-hook (lambda ()
+			       (setq web-mode-enable-auto-pairing nil)))
+
+    (defun sp-web-mode-is-code-context (id action context)
+      (and (eq action 'insert)
+	   (not (or (get-text-property (point) 'part-side)
+		    (get-text-property (point) 'block-side)))))
+
+    (sp-local-pair 'web-mode "<" nil :when '(sp-web-mode-is-code-context))))
 
 (use-package css-mode
   :init (setf flycheck-scss-stylelint-executable "stylelint --config stylelint-config-recommended-scss"))
