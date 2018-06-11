@@ -86,6 +86,21 @@
     (add-to-list 'auto-mode-alist '("\\.ctp\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))))
+(use-package enh-ruby-mode
+  :ensure t
+  :mode "\\.rb$")
+
+(use-package rvm
+  :ensure t)
+
+(use-package robe
+  :ensure t
+  :hook enh-mode-hook
+  :init
+  (progn
+    (defadvice inf-ruby-console-auto (before activate-rvm-for-robe activate)
+      (rvm-activate-corresponding-ruby)))
+  :config (robe-start))
 
 (provide 'web)
 ;;; web.el ends here
