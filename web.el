@@ -23,6 +23,9 @@
 
 (use-package js2-mode
   :ensure t
+  :bind
+  (("C-c p" . php-mode)
+   ("C-c w" . web-mode))
   :init
   (progn
     (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
@@ -93,6 +96,9 @@
 
 (use-package php-mode
   :ensure t
+  :bind
+  (("C-c w" . web-mode)
+   ("C-c j" . js2-mode))
   :init
   (progn
     (use-package ac-php
@@ -106,12 +112,15 @@
 
 (use-package web-mode
   :ensure t
+  :bind
+  (("C-c p" . php-mode)
+   ("C-c j" . js2-mode))
   :init
   (progn
     (add-to-list 'auto-mode-alist '("\\.ctp\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
-    
+    (add-to-list 'auto-mode-alist '("\\.styl\\'" . web-mode))
     (add-hook 'web-mode-hook (lambda ()
 			       (setq web-mode-enable-auto-pairing nil)))
 
@@ -121,6 +130,25 @@
 		    (get-text-property (point) 'block-side)))))
 
     (sp-local-pair 'web-mode "<" nil :when '(sp-web-mode-is-code-context))))
+
+(use-package css-mode
+  :init (setf flycheck-scss-stylelint-executable "stylelint --config stylelint-config-recommended-scss"))
+
+(use-package enh-ruby-mode
+  :ensure t
+  :mode "\\.rb$")
+
+(use-package rvm
+  :ensure t)
+
+(use-package robe
+  :ensure t
+  :hook enh-mode-hook
+  :init
+  (progn
+    (defadvice inf-ruby-console-auto (before activate-rvm-for-robe activate)
+      (rvm-activate-corresponding-ruby)))
+  :config (robe-start))
 
 (provide 'web)
 ;;; web.el ends here
