@@ -16,6 +16,8 @@
 ;;; We also need to disable lock files
 (setq create-lockfiles nil)
 
+(global-set-key (kbd "C-c o") (lambda () (interactive) (find-file "~/org/work.org")))
+
 ;;; Add flycheck
 (use-package flycheck
   :ensure t
