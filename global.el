@@ -30,7 +30,7 @@
 
 (use-package counsel
   :ensure t
-  :bind (("C-c g" . counsel-git-grep)))
+  :bind (("C-c g" . counsel-rg)))
 
 (use-package company
   ;; We do not add backends here do that on a per package basis
