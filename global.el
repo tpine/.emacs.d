@@ -47,6 +47,8 @@
       (delete-char -1)
       (insert replacement-char))))
 
+(global-set-key (kbd "C-c o") (lambda () (interactive) (find-file "~/org/work.org")))
+
 ;;; Add flycheck
 (use-package flycheck
   :ensure t
