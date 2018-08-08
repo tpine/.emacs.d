@@ -125,5 +125,9 @@
 	 ("C-<" . mc/mark-previous-like-this)
 	 ("C-c C-<" . mc/mark-all-like-this)))
 
+(use-package ranger
+  :config
+  (setq ranger-cleanup-on-disable t))
+
 (provide 'global)
 ;;; global.el ends here
