@@ -8,6 +8,37 @@
 ;;; 
 ;;; Code:
 
+(defun beginning-of-string ()
+  "Moves to the beginning of a syntactic string"
+  (interactive)
+  (unless (in-string-p)
+    (error "You must be in a string for this command to work"))
+  (while (in-string-p)
+    (forward-char -1))
+  (point))
+
+(defun swap-quotes-to-template ()
+  "Swaps the quote symbols in a string"
+  (interactive)
+  (save-excursion
+    (let ((bos (save-excursion
+                 (beginning-of-string)))
+          (eos (save-excursion
+                 (beginning-of-string)
+                 (forward-sexp)
+                 (point)))
+          (replacement-char ?\'))
+      (goto-char bos)
+      ;; if the following character is a single quote then the
+      ;; `replacement-char' should be a double quote.
+      (when (or (eq (following-char) ?\') (eq (following-char) ?\"))
+          (setq replacement-char ?`))
+      (delete-char 1)
+      (insert replacement-char)
+      (goto-char eos)
+      (delete-char -1)
+      (insert replacement-char))))
+
 (use-package indium
   ;; A javascript ide and repl
   ;; This will pull in js2 as well
@@ -25,7 +56,8 @@
   :ensure t
   :bind
   (("C-c p" . php-mode)
-   ("C-c w" . web-mode))
+   ("C-c w" . web-mode)
+   ("C-c t" . swap-quotes-to-template))
   :init
   (progn
     (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
