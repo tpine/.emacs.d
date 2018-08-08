@@ -6,7 +6,8 @@
 
 (use-package org
   :ensure t
-  :bind (("C-c c" . org-capture))
+  :bind (("C-c c" . org-capture)
+	 ("C-c !" . org-time-stamp-inactive))
   :init
   ;; Set global todo list
   (progn
@@ -21,7 +22,9 @@
        (php . t)
        (js . t)
        (mongo . t)))
-    (setq org-babel-lisp-eval-fn "sly-eval")
+    (setq org-babel-lisp-eval-fn "sly-eval"
+	  org-src-window-setup 'current-window)
+    (require 'org-notmuch)
     ;; General Org Config
     (setq org-agenda-files (list "~/org/home.org" "~/org/work.org")
 	  org-todo-keywords '((sequence "TODO" "|" "DONE" "CANCELED"))
@@ -36,6 +39,21 @@
   :init
   (elfeed-org)
   (setq rmh-elfeed-org-files (list "~/org/feeds.org")))
+
+(defun newtimesheet ()
+  "Create a new timesheet for the day."
+  (interactive)
+  (let ((default-clock-vars org-clock-clocktable-default-properties))
+    (setf org-clock-clocktable-default-properties '(:maxlevel 2 :scope ("~/org/work.org") :block today))
+    (find-file "~/org/timesheet.org")
+    (org-insert-heading-respect-content)
+    (org-time-stamp '(16) t)
+    (newline)
+    (org-clock-report)
+    (save-current-buffer)
+    (setf org-clock-clocktable-default-properties default-clock-vars)))
+
+(run-at-time "7pm" (* 24 60 60) #'newtimesheet)
 
 (provide 'org)
 ;;; org.el ends here
