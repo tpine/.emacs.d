@@ -10,7 +10,7 @@
   (next-line nil)
   (message-beginning-of-line nil)
   (set-mark-command nil)
-  (search-forward "--")
+  (re-search-forward "^--")
   (previous-line nil)
   (move-end-of-line nil)
   (org-mime-htmlize)
