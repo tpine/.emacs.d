@@ -26,7 +26,8 @@
 	  org-src-window-setup 'current-window)
     (require 'org-notmuch)
     ;; General Org Config
-    (setq org-agenda-files (list "~/org/home.org" "~/org/work.org")
+    (setq org-agenda-files (list "~/org/home.org" "~/org/work.org" "~/org/time-tracked.org")
+	  org-refile-targets '((org-agenda-files :maxlevel . 3))
 	  org-todo-keywords '((sequence "TODO" "|" "DONE" "CANCELED"))
 	  org-enforce-todo-dependencies t
 	  org-default-notes-file "~/org/global.org")))
