@@ -85,16 +85,14 @@
 
 (use-package rainbow-delimiters
   :ensure t
-  :init
-  (add-hooks 'rainbow-delimiters-mode '(emacs-lisp-mode-hook
-					lisp-mode-hook
-					sly-mrepl-mode-hook
-					php-mode-hook)))
+  :hook ((emacs-lisp-mode . rainbow-delimiters-mode)
+	 (lisp-mode . rainbow-delimiters-mode)
+	 (sly-mrepl-mode . rainbow-delimiters-mode)
+	 (php-mode . rainbow-delimiters-mode)))
 
 (use-package flyspell
   :ensure t
-  :init
-  (add-hook 'text-mode-hook (lambda () (flyspell-mode 1))))
+  :hook ((text-mode . flyspell-mode)))
 
 (use-package undo-tree
   :ensure t

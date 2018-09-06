@@ -45,16 +45,12 @@
 (require 'use-package)
 
 (use-package exec-path-from-shell
-  :ensure t)
+  :ensure t
+  :config
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
 
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
 
-;;; Utility Functions
-(defun add-hooks (fn hooks)
-  "Call 'add-hook' adding FN as hook for all HOOKS."
-  (dolist (hook hooks)
-    (add-hook hook fn)))
 
 ;;; Further config is here
 
