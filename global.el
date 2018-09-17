@@ -113,8 +113,7 @@
   :bind (("C-:" . avy-goto-char)
 	 ("C-'" . avy-goto-char-2)
 	 ("M-g f" . avy-goto-line)
-	 ("M-g w" . avy-goto-word-1))
-  :init (avy-setup-default))
+	 ("M-g w" . avy-goto-word-1)))
 
 (use-package ace-window
   :bind (("M-p" . ace-window)))

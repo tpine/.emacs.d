@@ -3,9 +3,8 @@
 ;;; Setup org mode
 
 ;;; Code:
-
 (use-package org
-  :ensure t
+  :ensure org-plus-contrib
   :bind (("C-c c" . org-capture)
 	 ("C-c !" . org-time-stamp-inactive))
   :init

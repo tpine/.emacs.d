@@ -21,13 +21,12 @@
 
 (use-package paredit
   :ensure t
-  :init
-  (add-hooks 'enable-paredit-mode '(emacs-lisp-mode-hook
-				    eval-expression-minibuffer-setup-hook
-				    ielm-mode-hook
-				    lisp-mode-hook
-				    lisp-interaction-mode-hook
-				    sly-mrepl-mode-hook)))
+  :hook ((emacs-lisp-mode-hook . enable-paredit-mode)
+	 (eval-expression-minibuffer-setup-hook . enable-paredit-mode)
+	 (ielm-mode-hook . enable-paredit-mode)
+	 (lisp-mode-hook . enable-paredit-mode)
+	 (lisp-interaction-mode-hook . enable-paredit-mode)
+	 (sly-mrepl-mode-hook . enable-paredit-mode)))
 
 (provide 'lisp)
 ;;; lisp.el ends here
