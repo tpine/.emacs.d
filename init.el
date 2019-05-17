@@ -13,7 +13,7 @@
  '(custom-safe-themes t)
  '(package-selected-packages
    (quote
-    (airline-themes doom-themes darktooth-theme yasnippet-snippets yasnippets ob-mongo ob-php company-php ac-php notmuch org slime wanderlust nyan-mode markdown-mode markdown-mode+ markdown-preview-eww stumpwm-mode magit flycheck flycheck-cython flycheck-pyflakes flycheck-rust powerline spaceline auctex auctex-latexmk auctex-lua web-mode rust-mode rainbow-delimiters polymode paredit inflections fill-column-indicator enh-ruby-mode autopair)))
+    (company-terraform terraform-mode ansible ansible-doc ansible-vault editorconfig editorconfig-charset-extras editorconfig-domain-specific docker docker-compose-mode docker-tramp dockerfile-mode airline-themes doom-themes darktooth-theme yasnippet-snippets yasnippets ob-mongo ob-php company-php ac-php notmuch org slime wanderlust nyan-mode markdown-mode markdown-mode+ markdown-preview-eww stumpwm-mode magit flycheck flycheck-cython flycheck-pyflakes flycheck-rust powerline spaceline auctex auctex-latexmk auctex-lua web-mode rust-mode rainbow-delimiters polymode paredit inflections fill-column-indicator enh-ruby-mode autopair)))
  '(send-mail-function (quote sendmail-send-it)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -22,56 +22,44 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight bold :height 98 :width normal)))))
 
+;;; Begin initialization
+;; Turn off mouse interface early in startup to avoid momentary display
+(when window-system
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+  (tooltip-mode -1))
 
-;;;  Extra Package Repositorys
+(setq inhibit-startup-message t)
+(setq initial-scratch-message "")
 
-;; MELPA
-;; Add package repositorys to emacs
+;;; Set up package
 (require 'package)
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/" ) t)
-(add-to-list 'package-archives
-             '("org" . "https://orgmode.org/elpa/") t)
-(when (< emacs-major-version 24)
-  ;; For important compatibility libraries like cl-lib
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
+             '("melpa" . "http://melpa.org/packages/") t)
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+(when (boundp 'package-pinned-packages)
+  (setq package-pinned-packages
+        '((org-plus-contrib . "org"))))
 (package-initialize)
 
-;;; Setup use-package so it is always installed
-(unless (package-installed-p 'use-package)
+;;; Bootstrap use-package
+;; Install use-package if it's not already installed.
+;; use-package is used to configure the rest of the packages.
+(unless (or (package-installed-p 'use-package)
+            (package-installed-p 'diminish))
   (package-refresh-contents)
-  (package-install 'use-package))
+  (package-install 'use-package)
+  (package-install 'diminish))
 
-(require 'use-package)
+;; From use-package README
+(eval-when-compile
+  (require 'use-package))
+(require 'diminish)                ;; if you use :diminish
+(require 'bind-key)
 
-(use-package exec-path-from-shell
-  :ensure t
-  :config
-  (when (memq window-system '(mac ns x))
-    (exec-path-from-shell-initialize)))
-
-
-
-;;; Further config is here
-
-;;; Lisp Config
-(load-file "~/.emacs.d/lisp.el")
-;;; Latex Config
-(load-file "~/.emacs.d/latex.el")
-;;; org-mode config
-(load-file "~/.emacs.d/org.el")
-;;; email config
-(load-file "~/.emacs.d/email.el")
-;;; web development config
-(load-file "~/.emacs.d/web.el")
-;;; Global changes to emacs
-(load-file "~/.emacs.d/global.el")
-;;; User Interface changes
-(load-file "~/.emacs.d/ui.el")
-
-(put 'downcase-region 'disabled nil)
-(put 'erase-buffer 'disabled nil)
-(put 'upcase-region 'disabled nil)
+;;; Load the config
+(org-babel-load-file (expand-file-name (concat user-emacs-directory "config.org")))
 
 (provide 'init.el)
 ;;; init.el ends here

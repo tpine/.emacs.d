@@ -1,0 +1,641 @@
+#+PROPERTY: header-args :tangle .emacs
+* My Emacs configuration
+** General
+   The Home of all non specific or system wide changes.
+   If anything is specific to a specific mode look for it in one of the lower sub-headings.
+*** Config
+    Ensure use-package is available
+    #+begin_src emacs-lisp
+     (require 'use-package)
+    #+end_src
+
+    Setup environment variables
+    #+begin_src emacs-lisp
+     (use-package exec-path-from-shell
+       :ensure t
+       :config
+       (when (memq window-system '(mac ns x))
+	 (exec-path-from-shell-initialize)))
+    #+end_src
+
+    Set spell checking programs
+    #+begin_src emacs-lisp
+      (setq ispell-program-name "aspell")
+      (setq ispell-dictionary "english")
+    #+end_src
+   
+    Set explicit-shell-file-name so that docker can connect to bare images. Ill find a better way of fixing this later.
+    #+begin_src emacs-lisp
+      (setq explicit-shell-file-name "/bin/sh")
+    #+end_src
+   
+*** The Node issue
+    Node doesn't have a good history of dealing with autosave and backup files.
+    If we set this to exist within the emacs config directory we can fix this.
+
+    Also it keeps the general project directory clean.
+    #+begin_src emacs-lisp
+      (setq backup-directory-alist
+	    `(("." . ,(expand-file-name
+		       (concat user-emacs-directory "backups")))))
+
+      (setq auto-save-file-name-transforms
+		`((".*" ,(expand-file-name
+			  (concat user-emacs-directory "auto-save")) t)))
+
+    #+end_src
+
+    #+RESULTS:
+    | .* | /home/thomas/.emacs.d/auto-save | t |
+
+    Lockfiles also suffer from the above issues so make sure they are disabled as I don't think we can rename them somewhere else.
+    #+begin_src emacs-lisp
+      (setq create-lockfiles nil)
+    #+end_src
+
+*** Quoting Functions
+    After a long battle fixing some badly written node code to a linter I needed these functions a lot.
+    They have proven useful.
+    #+begin_src emacs-lisp
+      (defun beginning-of-string ()
+	"Moves to the beginning of a syntactic string"
+	(interactive)
+	(unless (in-string-p)
+	  (error "You must be in a string for this command to work"))
+	(while (in-string-p)
+	  (forward-char -1))
+	(point))
+
+      (defun swap-quotes ()
+	"Swaps the quote symbols in a string"
+	(interactive)
+	(save-excursion
+	  (let ((bos (save-excursion
+		       (beginning-of-string)))
+		(eos (save-excursion
+		       (beginning-of-string)
+		       (forward-sexp)
+		       (point)))
+		(replacement-char ?\'))
+	    (goto-char bos)
+	    ;; if the following character is a single quote then the
+	    ;; `replacement-char' should be a double quote.
+	    (when (eq (following-char) ?\')
+		(setq replacement-char ?\"))
+	    (delete-char 1)
+	    (insert replacement-char)
+	    (goto-char eos)
+	    (delete-char -1)
+	    (insert replacement-char))))
+    #+end_src
+
+    #+RESULTS:
+    : swap-quotes
+    
+*** User Interface
+    Disable all excess UI elements.
+    #+begin_src emacs-lisp
+      (global-display-line-numbers-mode)
+      (setq column-number-mode t)
+      (tool-bar-mode -1)
+      (menu-bar-mode -1)
+      (scroll-bar-mode -1)
+      (custom-set-variables '(custom-safe-themes t))
+    #+end_src
+
+    #+RESULTS:
+
+**** Startup
+     Disable startup screens and change the initial buffer choice.
+     We also set the *scratch-buffer* to org-mode
+     #+begin_src emacs-lisp
+       (setq inhibit-startup-screen t
+	     initial-major-mode 'org-mode
+	     initial-buffer-choice "~/org/global.org"
+	     initial-scratch-message "\
+       ,* Notes
+       - This is a initial scratch buffer
+       - Buffer is set to org mode
+       - Run snippetts like a iPython Notebook using org-bable
+
+       ")
+     #+end_src
+
+     #+RESULTS:
+     : * Notes
+     : - This is a initial scratch buffer
+     : - Buffer is set to org mode
+     : - Run snippetts like a iPython Notebook using org-bable
+     : 
+
+**** Diminish
+     Remove things from the mode line
+     #+begin_src emacs-lisp
+       (use-package diminish
+	 :ensure t)
+     #+end_src
+    
+     abbrev-mode is everywhere. DISABLE.
+     #+begin_src emacs-lisp
+      (diminish 'abbrev-mode)
+     #+end_src
+**** Doom Themes
+     General User Interface
+     #+begin_src emacs-lisp
+       (use-package doom-themes
+	 :ensure t
+	 :init
+	 (progn 
+	   (require 'doom-themes)
+
+	   ;; Global settings (defaults)
+	   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+		 doom-themes-enable-italic t
+		 doom-vibrant-brighter-modeline nil
+		 org-hide-leading-stars nil) ; if nil, italics is universally disabled
+	   (load-theme 'doom-vibrant t)
+	   ;; Enable flashing mode-line on errors
+	   (doom-themes-visual-bell-config)
+	   ;; Corrects (and improves) org-mode's native fontification.
+	   (doom-themes-org-config)))
+     #+end_src
+
+     #+RESULTS:
+     
+     The UI Can be finnicky with setting the theme when launched in a GUI emacsclient and uses the terminal theme.
+     We don't want this
+     #+begin_src emacs-lisp
+       (add-hook 'after-make-frame-functions (lambda (frame)
+					       (when (display-graphic-p frame)
+						 (enable-theme 'doom-vibrant)
+						 (load-theme 'doom-vibrant))))
+     #+end_src
+
+     #+RESULTS:
+     | (lambda (frame) (when (display-graphic-p frame) (enable-theme (quote doom-vibrant)) (load-theme (quote doom-vibrant)))) | x-dnd-init-frame |
+
+**** Nyan Mode
+     Nyan Cat tells us how far we are through the file.
+     This uses some deprecated functions. We should fix this at some point.
+     #+begin_src emacs-lisp
+       (use-package nyan-mode
+	 :ensure t
+	 :init
+	 ;; Fix up Nyan Cat cause she's pretty
+	 (setq nyan-animate-nyancat t
+	       nyan-wavy-trail t)
+	 (nyan-mode))
+     #+end_src
+**** Zone
+     Make the screen freak out after 5min. Can freak onlookers out.
+     #+begin_src emacs-lisp
+       (require 'zone)
+       (zone-when-idle 300)
+     #+end_src
+*** Global Packages
+    These packages are enabled everywhere
+
+**** Flycheck
+     We use flycheck to lint all our files
+     #+begin_src emacs-lisp
+       (use-package flycheck
+	 :ensure t
+	 :init (global-flycheck-mode))
+     #+end_src
+
+**** Ivy & Counsel
+     These two are our pair of completion engines.
+
+     We bind swiper to the previous isearch-forward binding.
+     isearch-forward is is rebound to C-S-s for convenience when writing macros.
+     #+begin_src emacs-lisp
+       (use-package ivy
+	 :ensure t
+	 :bind (("C-s" . swiper)
+		("C-S-s" . isearch-forward))
+	 :diminish ivy-mode
+	 :init (ivy-mode 1))
+
+       (use-package counsel
+	 :ensure t
+	 :bind (("C-c g" . counsel-rg)))
+     #+end_src
+     
+**** Company
+     Who likes auto-completion?
+
+     ...
+     ...
+     
+     Well I do sometimes!
+     #+begin_src emacs-lisp
+       (use-package company
+	 ;; We do not add backends here do that on a per package basis
+	 :ensure t)
+     #+end_src
+
+**** Magit
+     Welcome to one of the greatest reasons to use emacs!
+     #+begin_src emacs-lisp
+       (use-package magit
+	 :ensure t
+	 :bind (("C-c m" . magit-status)))
+     #+end_src
+
+**** Expand Region
+     This will expand to the next biggest indentation block.
+     There is a better solution somewhere but I can't remember where.
+     #+begin_src emacs-lisp
+       (use-package expand-region
+	 :ensure t
+	 :bind (("C-=" . er/expand-region)
+		("C--" . er/contract-region)))
+     #+end_src
+
+**** Rainbow Delimiters
+     This makes lisp a lot easier to deal with. Sometimes helps with other files sometimes.
+
+     *BE CAREFUL*
+     Can cause emacs to die on some files.
+     #+begin_src emacs-lisp
+       (use-package rainbow-delimiters
+	 :ensure t
+	 :hook ((emacs-lisp-mode . rainbow-delimiters-mode)
+		(lisp-mode . rainbow-delimiters-mode)
+		(sly-mrepl-mode . rainbow-delimiters-mode)
+		(php-mode . rainbow-delimiters-mode)))
+     #+end_src
+
+**** Move Text
+     This was important enough to keep at some point can't remember why?
+     Normally we handle block moving with M-p and M-n
+     #+begin_src emacs-lisp
+       (use-package move-text
+	 :ensure t
+	 :bind (("M-<up>" . move-text-up)
+		("M-<down>" . move-text-down)))
+     #+end_src
+
+**** Flyspell
+     We need flyspell to work on text mode files for git commit messages. We will hook this off a more explicate user at somepoint.
+     #+begin_src emacs-lisp
+       (use-package flyspell
+	 :ensure t
+	 :hook ((text-mode . flyspell-mode)))
+     #+end_src
+
+**** Undo Tree
+     How do you feel about a branching undo tree? It can help sometimes.
+     #+begin_src emacs-lisp
+       (use-package undo-tree
+	 :ensure t
+	 :diminish undo-tree-mode
+	 :init
+	 (global-undo-tree-mode))
+     #+end_src
+
+**** Yassnippet
+     General Snippet Engine.
+     Honestly not used that often.
+     #+begin_src emacs-lisp
+       (use-package yasnippet
+	 :ensure t
+	 :diminish yas-minor-mode
+	 :config
+	 (progn
+	   (use-package yasnippet-snippets
+	     :ensure t)
+	   (yas-global-mode 1)))
+     #+end_src
+     
+**** Avy
+     Jump to specified point
+     #+begin_src emacs-lisp
+       (use-package avy
+	 :ensure t
+	 :bind (("C-:" . avy-goto-char)
+		("C-'" . avy-goto-char-2)
+		("M-g f" . avy-goto-line)
+		("M-g w" . avy-goto-word-1)))
+
+     #+end_src
+
+***** Ace Window
+      Jump to specified Window
+      #+begin_src emacs-lisp
+	(use-package ace-window
+	  :ensure t
+	  :bind (("M-p" . ace-window)))
+      #+end_src
+
+**** Multiple Cursors
+     Like [[Move Text]] this isn't used so much. It can be replaced with macros etc.
+     #+begin_src emacs-lisp
+       (use-package multiple-cursors
+	 :ensure t
+	 :bind (("C-S-c C-S-c" . mc/edit-lines)
+		("C->" . mc/mark-next-like-this)
+		("C-<" . mc/mark-previous-like-this)
+		("C-c C-<" . mc/mark-all-like-this)))
+
+     #+end_src
+
+**** Ranger
+     Phasing out in favour of pure dired.
+     #+begin_src emacs-lisp
+      (use-package ranger
+	:ensure t
+	:config
+	(setq ranger-cleanup-on-disable t))
+     #+end_src
+**** Smartparens
+     This works for less lisp languages where [[Paredit]] fails.
+     #+begin_src emacs-lisp
+       (use-package smartparens
+	 :ensure t
+	 :bind (("C-<right>" . sp-forward-slurp-sexp)
+		("C-<left>" . sp-forward-barf-sexp))
+	 :init
+	 (use-package smartparens-config)
+	 (smartparens-global-mode 1))
+     #+end_src
+*** Enable Functions
+    #+begin_src emacs-lisp
+      (put 'downcase-region 'disabled nil)
+      (put 'erase-buffer 'disabled nil)
+      (put 'upcase-region 'disabled nil)
+    #+end_src
+** Lisp
+*** General
+    Add .lsp file to lisp-mode
+    #+begin_src emacs-lisp
+     (add-to-list 'auto-mode-alist '("\\.lsp" . lisp-mode))
+    #+end_src
+  
+*** Common Lisp
+**** Sly
+     Add sly for connecting to sbcl processes when running
+     #+begin_src emacs-lisp
+     (use-package sly
+       :ensure t
+       :config
+       (setq inferior-lisp-program "sbcl")
+       (setq sly-auto-start 'ask))
+     #+end_src
+     We normally run StumpWM as our window manager so add binding to quickly connect:
+     #+begin_src emacs-lisp
+     (defun connect-to-stumpwm ()
+       "Connect to stumpwm on localhost port 4004."
+       (interactive)
+       (sly-connect "127.0.0.1" 4004))
+
+     (bind-key "C-c s" 'connect-to-stumpwm)
+     #+end_src
+
+**** Paredit
+     Paredit is used for managing parenthesis in lisp languages
+     #+begin_src emacs-lisp
+       (use-package paredit
+	 :ensure t
+	 :hook ((emacs-lisp-mode-hook . enable-paredit-mode)
+		(eval-expression-minibuffer-setup-hook . enable-paredit-mode)
+		(ielm-mode-hook . enable-paredit-mode)
+		(lisp-mode-hook . enable-paredit-mode)
+		(lisp-interaction-mode-hook . enable-paredit-mode)
+		(sly-mrepl-mode-hook . enable-paredit-mode)))
+     #+end_src
+
+** TeX
+   Use AucTex for Text files
+   #+begin_src emacs-lisp
+     (use-package tex
+       :ensure auctex
+       :defer t
+       :config
+       (setq TeX-auto-save t
+	     TeX-parse-self t
+	     TeX-save-query nil
+	     TeX-PDF-mode t))
+   #+end_src
+   
+   Add Spell checking
+   #+begin_src emacs-lisp
+     (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+     (add-hook 'LaTeX-mode-hook 'flyspell-buffer)
+   #+end_src
+
+** Org
+   Add org mode
+   #+begin_src emacs-lisp
+     (defun open-work-org-file  ()
+	 "Open the org mode file for work."
+       (interactive)
+       (find-file "~/org/work.org"))
+
+
+     (use-package org
+       :ensure org-plus-contrib
+       :bind (("C-c c" . org-capture)
+	      ("C-c !" . org-time-stamp-inactive)
+	      ("C-c o" . open-work-org-file))
+       :init
+       ;; Set global todo list
+       (progn
+	 ;; active Babel languages
+	 (org-babel-do-load-languages
+	  'org-babel-load-languages
+	  '((R . t)
+	    (emacs-lisp . t)
+	    (shell . t)
+	    (lisp . t)
+	    (latex . t)
+	    (php . t)
+	    (js . t)))
+	 (setq org-babel-lisp-eval-fn "sly-eval"
+	       org-src-window-setup 'current-window)
+	 (require 'org-notmuch)
+	 ;; General Org Config
+	 (setq org-agenda-files (list "~/org/home.org" "~/org/work.org" "~/org/time-tracked.org")
+	       org-refile-targets '((org-agenda-files :maxlevel . 3))
+	       org-todo-keywords '((sequence "TODO" "|" "DONE" "CANCELED"))
+	       org-enforce-todo-dependencies t
+	       org-default-notes-file "~/org/global.org")))
+   #+end_src
+
+*** RSS
+    Use elfeed for RSS through org mode
+    #+begin_src emacs-lisp
+      (use-package elfeed
+	:ensure t)
+
+      (use-package elfeed-org
+	:ensure t
+	:init
+	(elfeed-org)
+	(setq rmh-elfeed-org-files (list "~/org/feeds.org")))
+    #+end_src
+
+** Email
+   Use notmuch for emails
+   #+begin_src emacs-lisp
+     (defun format-email ()
+       (interactive)
+       (beginning-of-buffer)
+       (search-forward "--text follows this line--")
+       (next-line nil)
+       (message-beginning-of-line nil)
+       (set-mark-command nil)
+       (re-search-forward "^--")
+       (previous-line nil)
+       (move-end-of-line nil)
+       (org-mime-htmlize)
+       (set-mark-command nil)
+       (search-backward "<#/multipart>\n<#/multipart>")
+       (kill-region (point) (mark))
+       (end-of-buffer)
+       (insert "<#/multipart><#/multipart>"))
+
+     (use-package notmuch
+       :ensure t
+       :config
+       (setq notmuch-search-oldest-first nil
+	     mail-specify-envelope-from t
+	     message-sendmail-envelope-from 'header
+	     mail-envelope-from 'header
+	     notmuch-address-command 'internal)
+       (add-hook 'notmuch-message-mode-hook 'flyspell-mode)
+       (add-hook 'notmuch-message-mode-hook 'flyspell-buffer)
+       (add-hook 'message-send-hook 'format-email))
+   #+end_src
+
+** Web
+   Stuff for dealing with web technologies
+   
+*** General
+    Web Mode powers our general system interaction
+    #+begin_src emacs-lisp
+      (use-package web-mode
+	:ensure t
+	:mode (("\\.ctp\\'" . web-mode)
+	       ("\\.html\\'" . web-mode)
+	       ("\\.twig\\'" . web-mode)
+	       ("\\.styl\\'" . web-mode))
+	:hook ((web-mode . (lambda ()
+			      (setq web-mode-enable-auto-pairing nil))))
+	:init
+	(progn
+	  (defun sp-web-mode-is-code-context (id action context)
+	    (and (eq action 'insert)
+		 (not (or (get-text-property (point) 'part-side)
+			  (get-text-property (point) 'block-side)))))
+
+	  (sp-local-pair 'web-mode "<" nil :when '(sp-web-mode-is-code-context))))
+    #+end_src
+    
+    Company is our general completion framework
+    #+begin_src emacs-lisp
+      (use-package company-tern
+	:ensure t
+	:init
+	(add-to-list 'company-backends 'company-tern))
+    #+end_src
+*** Ruby
+    Ruby has a issue where the mode wants a running ruby console.
+    If that isn't found don't install ruby/
+    #+begin_src emacs-lisp
+      (if (executable-find "ruby")
+	  (progn
+	    (use-package enh-ruby-mode
+	      :ensure t
+	      :mode "\\.rb$")
+
+	    (use-package rvm
+	      :ensure t)
+
+	    (use-package robe
+	      :ensure t
+	      :hook enh-mode-hook
+	      :init
+	      (progn
+		(defadvice inf-ruby-console-auto (before activate-rvm-for-robe activate)
+		  (rvm-activate-corresponding-ruby)))
+	      :config (robe-start))))
+    #+end_src
+*** Javascript
+    Use JS2 Mode for all javascript files
+    #+begin_src emacs-lisp
+      (use-package js2-mode
+	:ensure t
+	:mode ("\\.js\\'" . js2-mode) 
+	:bind (("C-c p" . php-mode)
+	       ("C-c w" . web-mode)
+	       ("C-c t" . swap-quotes-to-template))
+	:hook ((js2-mode . company-mode)
+	       (js2-mode . rainbow-delimiters-mode)
+	       (js2-mode . (lambda () (setq indent-tabs-mode nil))))
+	:config (setq js2f-mode-show-parse-errors nil
+		      js2-mode-show-strict-warnings nil
+		      flycheck-javascript-standard-executable "semistandard"))
+
+      (use-package js2-refactor
+	:ensure t
+	:hook ((js2-mode . js2-refactor-mode))
+	:init
+	(progn
+	  (js2r-add-keybindings-with-prefix "C-c C-r")
+	  (define-key js2-mode-map (kbd "C-k") #'js2r-kill)))
+
+      (use-package xref-js2
+	:ensure t
+	:hook ((js2-mode . (lambda ()
+			     (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t))))
+	:init
+	(progn
+	  (define-key js-mode-map (kbd "M-.") nil)))
+    #+end_src
+
+*** Typescript
+    #+begin_src emacs-lisp
+      (cl-flet ((setup-tide-mode ()
+				 (tide-setup)
+				 (flycheck-mode +1)
+				 (setq flycheck-check-syntax-automatically '(save mode-enabled))
+				 (rainbow-delimiters-mode)
+				 (eldoc-mode +1)
+				 (tide-hl-identifier-mode +1)
+				 (company-mode +1)))
+	(use-package tide
+	  :ensure t
+	  :after (typescript-mode company flycheck)
+	  :mode ("\\.tsx\\'" . web-mode)
+	  :bind (("C-c r" . tide-rename-symbol))
+	  :hook ((typescript-mode-hook . setup-tide-mode)
+		 (before-save . tide-format-before-save)
+		 (web-mode-hook . (lambda ()
+				    (when (string-equal "tsx" (file-name-extension buffer-file-name))
+				      (setup-tide-mode)))))))
+    #+end_src
+
+*** PHP
+    #+begin_src emacs-lisp
+      (use-package ac-php :ensure t)
+      (use-package company-php :ensure t)
+
+      (use-package php-mode
+	:ensure t
+	:bind
+	(("C-c w" . web-mode)
+	 ("C-c j" . js2-mode))
+	:init
+	(progn
+	   (ac-php-core-eldoc-setup)
+	   (make-local-variable 'company-backends)
+	   (add-to-list 'company-backends 'company-ac-php-backend)
+	   (add-hook 'php-mode-hook (lambda () (setq indent-tabs-mode nil)))))
+    #+end_src
+*** CSS
+    If styleint exists use it for css checking.
+    #+begin_src emacs-lisp
+      (if (executable-find "stylelint")
+	  (setf flycheck-scss-stylelint-executable "stylelint --config stylelint-config-recommended-scss"))
+    #+end_src
