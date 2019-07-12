@@ -273,6 +273,13 @@
 	 :bind (("C-c m" . magit-status)))
      #+end_src
 
+***** Magit Forge
+      This allows the use of git forges in magit
+      #+begin_src emacs-lisp
+	(use-package forge
+	  :quelpa
+	  :after magit)
+      #+end_src
 **** Expand Region
      This will expand to the next biggest indentation block.
      There is a better solution somewhere but I can't remember where.
