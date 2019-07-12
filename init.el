@@ -13,7 +13,7 @@
  '(custom-safe-themes t)
  '(package-selected-packages
    (quote
-    (company-terraform terraform-mode ansible ansible-doc ansible-vault editorconfig editorconfig-charset-extras editorconfig-domain-specific docker docker-compose-mode docker-tramp dockerfile-mode airline-themes doom-themes darktooth-theme yasnippet-snippets yasnippets ob-mongo ob-php company-php ac-php notmuch org slime wanderlust nyan-mode markdown-mode markdown-mode+ markdown-preview-eww stumpwm-mode magit flycheck flycheck-cython flycheck-pyflakes flycheck-rust powerline spaceline auctex auctex-latexmk auctex-lua web-mode rust-mode rainbow-delimiters polymode paredit inflections fill-column-indicator enh-ruby-mode autopair)))
+    (php-mode robe inf-ruby rvm forge mark-tools tide xref-js2 js2-refactor js2-mode company-tern elfeed-org elfeed org-plus-contrib sly smartparens ranger multiple-cursors ace-window avy yasnippet undo-tree move-text expand-region company counsel ivy company-terraform terraform-mode ansible ansible-doc ansible-vault editorconfig editorconfig-charset-extras editorconfig-domain-specific docker docker-compose-mode docker-tramp dockerfile-mode airline-themes doom-themes darktooth-theme yasnippet-snippets yasnippets ob-mongo ob-php company-php ac-php notmuch org slime wanderlust nyan-mode markdown-mode markdown-mode+ markdown-preview-eww stumpwm-mode magit flycheck flycheck-cython flycheck-pyflakes flycheck-rust powerline spaceline auctex auctex-latexmk auctex-lua web-mode rust-mode rainbow-delimiters polymode paredit inflections fill-column-indicator enh-ruby-mode autopair)))
  '(send-mail-function (quote sendmail-send-it)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -43,20 +43,14 @@
         '((org-plus-contrib . "org"))))
 (package-initialize)
 
-;;; Bootstrap use-package
-;; Install use-package if it's not already installed.
-;; use-package is used to configure the rest of the packages.
-(unless (or (package-installed-p 'use-package)
-            (package-installed-p 'diminish))
-  (package-refresh-contents)
-  (package-install 'use-package)
-  (package-install 'diminish))
-
-;; From use-package README
-(eval-when-compile
-  (require 'use-package))
-(require 'diminish)                ;; if you use :diminish
-(require 'bind-key)
+;;; Bootstrap quelpa
+;; Install quelpa if it's not already installed.
+;; quelpa is used to configure the rest of the packages.
+(if (require 'quelpa nil t)
+    (quelpa-self-upgrade)
+  (with-temp-buffer
+    (url-insert-file-contents "https://framagit.org/steckerhalter/quelpa/raw/master/bootstrap.el")
+    (eval-buffer)))
 
 ;;; Load the config
 (org-babel-load-file (expand-file-name (concat user-emacs-directory "config.org")))

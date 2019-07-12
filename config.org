@@ -1,21 +1,52 @@
 #+PROPERTY: header-args :tangle .emacs
 * My Emacs configuration
+** Quelpa and use-package
+   Quelpa is used for dependency management and use-package is used for configuration.
+
+   Quelpa has some usefulness over the default package.el. For one we can now easially use dependencies which do not exist on elpa or melpa and pull directly from git repos etc. Quelpa also allows you to upgrade all these packages on startup. In most cases we will be simply pulling from melpa and using qualpa for the upgrade functionality.
+
+   At this point quelpa was bootstrapped in init.el.
+   Allow Quelpa to upgrade all packages on startup.
+   #+begin_src emacs-lisp
+     (setq quelpa-upgrade-p t)
+   #+end_src
+
+   Add quelpa-use-package so that we can use quelpa in conjunction with use-package.
+   #+begin_src emacs-lisp
+     (quelpa
+      '(quelpa-use-package
+	:fetcher git
+	:url "https://framagit.org/steckerhalter/quelpa-use-package.git"))
+     (require 'quelpa-use-package)
+   #+end_src
+
+   Old setup for use-package.
+   #+begin_src emacs-lisp :tangle no
+
+     (unless (or (package-installed-p 'use-package)
+		 (package-installed-p 'diminish))
+       (package-refresh-contents)
+       (package-install 'use-package)
+       (package-install 'diminish))
+
+     ;; From use-package README
+     (eval-when-compile
+       (require 'use-package))
+     (require 'diminish)                ;; if you use :diminish
+     (require 'bind-key)
+
+   #+end_src
 ** General
    The Home of all non specific or system wide changes.
    If anything is specific to a specific mode look for it in one of the lower sub-headings.
 *** Config
-    Ensure use-package is available
-    #+begin_src emacs-lisp
-     (require 'use-package)
-    #+end_src
-
     Setup environment variables
     #+begin_src emacs-lisp
-     (use-package exec-path-from-shell
-       :ensure t
-       :config
-       (when (memq window-system '(mac ns x))
-	 (exec-path-from-shell-initialize)))
+      (use-package exec-path-from-shell
+	:quelpa
+	:config
+	(when (memq window-system '(mac ns x))
+	  (exec-path-from-shell-initialize)))
     #+end_src
 
     Set spell checking programs
@@ -132,7 +163,7 @@
      Remove things from the mode line
      #+begin_src emacs-lisp
        (use-package diminish
-	 :ensure t)
+	 :quelpa)
      #+end_src
     
      abbrev-mode is everywhere. DISABLE.
@@ -143,7 +174,7 @@
      General User Interface
      #+begin_src emacs-lisp
        (use-package doom-themes
-	 :ensure t
+	 :quelpa
 	 :init
 	 (progn 
 	   (require 'doom-themes)
@@ -179,7 +210,7 @@
      This uses some deprecated functions. We should fix this at some point.
      #+begin_src emacs-lisp
        (use-package nyan-mode
-	 :ensure t
+	 :quelpa
 	 :init
 	 ;; Fix up Nyan Cat cause she's pretty
 	 (setq nyan-animate-nyancat t
@@ -199,7 +230,7 @@
      We use flycheck to lint all our files
      #+begin_src emacs-lisp
        (use-package flycheck
-	 :ensure t
+	 :quelpa
 	 :init (global-flycheck-mode))
      #+end_src
 
@@ -210,14 +241,14 @@
      isearch-forward is is rebound to C-S-s for convenience when writing macros.
      #+begin_src emacs-lisp
        (use-package ivy
-	 :ensure t
+	 :quelpa
 	 :bind (("C-s" . swiper)
 		("C-S-s" . isearch-forward))
 	 :diminish ivy-mode
 	 :init (ivy-mode 1))
 
        (use-package counsel
-	 :ensure t
+	 :quelpa
 	 :bind (("C-c g" . counsel-rg)))
      #+end_src
      
@@ -231,14 +262,14 @@
      #+begin_src emacs-lisp
        (use-package company
 	 ;; We do not add backends here do that on a per package basis
-	 :ensure t)
+	 :quelpa)
      #+end_src
 
 **** Magit
      Welcome to one of the greatest reasons to use emacs!
      #+begin_src emacs-lisp
        (use-package magit
-	 :ensure t
+	 :quelpa
 	 :bind (("C-c m" . magit-status)))
      #+end_src
 
@@ -247,7 +278,7 @@
      There is a better solution somewhere but I can't remember where.
      #+begin_src emacs-lisp
        (use-package expand-region
-	 :ensure t
+	 :quelpa
 	 :bind (("C-=" . er/expand-region)
 		("C--" . er/contract-region)))
      #+end_src
@@ -259,7 +290,7 @@
      Can cause emacs to die on some files.
      #+begin_src emacs-lisp
        (use-package rainbow-delimiters
-	 :ensure t
+	 :quelpa
 	 :hook ((emacs-lisp-mode . rainbow-delimiters-mode)
 		(lisp-mode . rainbow-delimiters-mode)
 		(sly-mrepl-mode . rainbow-delimiters-mode)
@@ -271,7 +302,7 @@
      Normally we handle block moving with M-p and M-n
      #+begin_src emacs-lisp
        (use-package move-text
-	 :ensure t
+	 :quelpa
 	 :bind (("M-<up>" . move-text-up)
 		("M-<down>" . move-text-down)))
      #+end_src
@@ -280,7 +311,7 @@
      We need flyspell to work on text mode files for git commit messages. We will hook this off a more explicate user at somepoint.
      #+begin_src emacs-lisp
        (use-package flyspell
-	 :ensure t
+	 :quelpa
 	 :hook ((text-mode . flyspell-mode)))
      #+end_src
 
@@ -288,7 +319,7 @@
      How do you feel about a branching undo tree? It can help sometimes.
      #+begin_src emacs-lisp
        (use-package undo-tree
-	 :ensure t
+	 :quelpa
 	 :diminish undo-tree-mode
 	 :init
 	 (global-undo-tree-mode))
@@ -299,12 +330,12 @@
      Honestly not used that often.
      #+begin_src emacs-lisp
        (use-package yasnippet
-	 :ensure t
+	 :quelpa
 	 :diminish yas-minor-mode
 	 :config
 	 (progn
 	   (use-package yasnippet-snippets
-	     :ensure t)
+	     :quelpa)
 	   (yas-global-mode 1)))
      #+end_src
      
@@ -312,7 +343,7 @@
      Jump to specified point
      #+begin_src emacs-lisp
        (use-package avy
-	 :ensure t
+	 :quelpa
 	 :bind (("C-:" . avy-goto-char)
 		("C-'" . avy-goto-char-2)
 		("M-g f" . avy-goto-line)
@@ -324,7 +355,7 @@
       Jump to specified Window
       #+begin_src emacs-lisp
 	(use-package ace-window
-	  :ensure t
+	  :quelpa
 	  :bind (("M-p" . ace-window)))
       #+end_src
 
@@ -332,7 +363,7 @@
      Like [[Move Text]] this isn't used so much. It can be replaced with macros etc.
      #+begin_src emacs-lisp
        (use-package multiple-cursors
-	 :ensure t
+	 :quelpa
 	 :bind (("C-S-c C-S-c" . mc/edit-lines)
 		("C->" . mc/mark-next-like-this)
 		("C-<" . mc/mark-previous-like-this)
@@ -344,7 +375,7 @@
      Phasing out in favour of pure dired.
      #+begin_src emacs-lisp
       (use-package ranger
-	:ensure t
+	:quelpa
 	:config
 	(setq ranger-cleanup-on-disable t))
      #+end_src
@@ -352,7 +383,7 @@
      This works for less lisp languages where [[Paredit]] fails.
      #+begin_src emacs-lisp
        (use-package smartparens
-	 :ensure t
+	 :quelpa
 	 :bind (("C-<right>" . sp-forward-slurp-sexp)
 		("C-<left>" . sp-forward-barf-sexp))
 	 :init
@@ -377,7 +408,7 @@
      Add sly for connecting to sbcl processes when running
      #+begin_src emacs-lisp
      (use-package sly
-       :ensure t
+       :quelpa
        :config
        (setq inferior-lisp-program "sbcl")
        (setq sly-auto-start 'ask))
@@ -396,7 +427,7 @@
      Paredit is used for managing parenthesis in lisp languages
      #+begin_src emacs-lisp
        (use-package paredit
-	 :ensure t
+	 :quelpa
 	 :hook ((emacs-lisp-mode-hook . enable-paredit-mode)
 		(eval-expression-minibuffer-setup-hook . enable-paredit-mode)
 		(ielm-mode-hook . enable-paredit-mode)
@@ -466,10 +497,10 @@
     Use elfeed for RSS through org mode
     #+begin_src emacs-lisp
       (use-package elfeed
-	:ensure t)
+	:quelpa)
 
       (use-package elfeed-org
-	:ensure t
+	:quelpa
 	:init
 	(elfeed-org)
 	(setq rmh-elfeed-org-files (list "~/org/feeds.org")))
@@ -496,7 +527,7 @@
        (insert "<#/multipart><#/multipart>"))
 
      (use-package notmuch
-       :ensure t
+       :quelpa
        :config
        (setq notmuch-search-oldest-first nil
 	     mail-specify-envelope-from t
@@ -515,7 +546,7 @@
     Web Mode powers our general system interaction
     #+begin_src emacs-lisp
       (use-package web-mode
-	:ensure t
+	:quelpa
 	:mode (("\\.ctp\\'" . web-mode)
 	       ("\\.html\\'" . web-mode)
 	       ("\\.twig\\'" . web-mode)
@@ -535,7 +566,7 @@
     Company is our general completion framework
     #+begin_src emacs-lisp
       (use-package company-tern
-	:ensure t
+	:quelpa
 	:init
 	(add-to-list 'company-backends 'company-tern))
     #+end_src
@@ -546,14 +577,14 @@
       (if (executable-find "ruby")
 	  (progn
 	    (use-package enh-ruby-mode
-	      :ensure t
+	      :quelpa
 	      :mode "\\.rb$")
 
 	    (use-package rvm
-	      :ensure t)
+	      :quelpa)
 
 	    (use-package robe
-	      :ensure t
+	      :quelpa
 	      :hook enh-mode-hook
 	      :init
 	      (progn
@@ -565,7 +596,7 @@
     Use JS2 Mode for all javascript files
     #+begin_src emacs-lisp
       (use-package js2-mode
-	:ensure t
+	:quelpa
 	:mode ("\\.js\\'" . js2-mode) 
 	:bind (("C-c p" . php-mode)
 	       ("C-c w" . web-mode)
@@ -578,7 +609,7 @@
 		      flycheck-javascript-standard-executable "semistandard"))
 
       (use-package js2-refactor
-	:ensure t
+	:quelpa
 	:hook ((js2-mode . js2-refactor-mode))
 	:init
 	(progn
@@ -586,7 +617,7 @@
 	  (define-key js2-mode-map (kbd "C-k") #'js2r-kill)))
 
       (use-package xref-js2
-	:ensure t
+	:quelpa
 	:hook ((js2-mode . (lambda ()
 			     (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t))))
 	:init
@@ -605,7 +636,7 @@
 				 (tide-hl-identifier-mode +1)
 				 (company-mode +1)))
 	(use-package tide
-	  :ensure t
+	  :quelpa
 	  :after (typescript-mode company flycheck)
 	  :mode ("\\.tsx\\'" . web-mode)
 	  :bind (("C-c r" . tide-rename-symbol))
@@ -618,11 +649,11 @@
 
 *** PHP
     #+begin_src emacs-lisp
-      (use-package ac-php :ensure t)
-      (use-package company-php :ensure t)
+      (use-package ac-php :quelpa)
+      (use-package company-php :quelpa)
 
       (use-package php-mode
-	:ensure t
+	:quelpa
 	:bind
 	(("C-c w" . web-mode)
 	 ("C-c j" . js2-mode))
