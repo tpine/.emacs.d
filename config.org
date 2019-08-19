@@ -643,24 +643,26 @@
 
 *** Typescript
     #+begin_src emacs-lisp
-      (cl-flet ((setup-tide-mode ()
-				 (tide-setup)
-				 (flycheck-mode +1)
-				 (setq flycheck-check-syntax-automatically '(save mode-enabled))
-				 (rainbow-delimiters-mode)
-				 (eldoc-mode +1)
-				 (tide-hl-identifier-mode +1)
-				 (company-mode +1)))
-	(use-package tide
-	  :quelpa
-	  :after (typescript-mode company flycheck)
-	  :mode ("\\.tsx\\'" . web-mode)
-	  :bind (("C-c r" . tide-rename-symbol))
-	  :hook ((typescript-mode-hook . setup-tide-mode)
-		 (before-save . tide-format-before-save)
-		 (web-mode-hook . (lambda ()
-				    (when (string-equal "tsx" (file-name-extension buffer-file-name))
-				      (setup-tide-mode)))))))
+      (use-package tide
+	:quelpa
+	:after (typescript-mode company flycheck)
+	:mode ("\\.tsx$" . web-mode)
+	:bind (("C-c r" . tide-rename-symbol))
+	:init
+	(defun setup-tide-mode ()
+	  (interactive)
+	  (tide-setup)
+	  (flycheck-mode +1)
+	  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+	  (rainbow-delimiters-mode)
+	  (eldoc-mode +1)
+	  (tide-hl-identifier-mode +1)
+	  (company-mode +1))
+	:hook ((typescript-mode . setup-tide-mode)
+	       (before-save . tide-format-before-save)
+	       (web-mode . (lambda ()
+				  (when (string-equal "tsx" (file-name-extension buffer-file-name))
+				    (setup-tide-mode))))))
     #+end_src
 
 *** PHP
