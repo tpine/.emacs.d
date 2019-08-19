@@ -577,6 +577,15 @@
 	:init
 	(add-to-list 'company-backends 'company-tern))
     #+end_src
+
+    Increasingly we use binarys which are found within the node_modules/ folder for individual projects.
+    add-node-modules-path searches for node_modules/ when within some modes
+    #+begin_src emacs-lisp
+      (use-package add-node-modules-path
+	:quelpa
+	:hook ((js-mode . #'add-node-modules-path)))
+    #+end_src
+
 *** Ruby
     Ruby has a issue where the mode wants a running ruby console.
     If that isn't found don't install ruby/
