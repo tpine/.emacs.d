@@ -1,4 +1,4 @@
-#+PROPERTY: header-args :tangle .emacs
+#+PROPERTY: header-args :tangle .emacs :results output silent
 * My Emacs configuration
 ** Quelpa and use-package
    Quelpa is used for dependency management and use-package is used for configuration.
