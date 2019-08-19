@@ -407,7 +407,7 @@
 *** General
     Add .lsp file to lisp-mode
     #+begin_src emacs-lisp
-     (add-to-list 'auto-mode-alist '("\\.lsp" . lisp-mode))
+      (add-to-list 'auto-mode-alist '("\\.lsp$" . lisp-mode))
     #+end_src
   
 *** Common Lisp
@@ -554,10 +554,10 @@
     #+begin_src emacs-lisp
       (use-package web-mode
 	:quelpa
-	:mode (("\\.ctp\\'" . web-mode)
-	       ("\\.html\\'" . web-mode)
-	       ("\\.twig\\'" . web-mode)
-	       ("\\.styl\\'" . web-mode))
+	:mode (("\\.ctp$" . web-mode)
+	       ("\\.html$" . web-mode)
+	       ("\\.twig$" . web-mode)
+	       ("\\.styl$" . web-mode))
 	:hook ((web-mode . (lambda ()
 			      (setq web-mode-enable-auto-pairing nil))))
 	:init
