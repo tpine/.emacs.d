@@ -6,10 +6,6 @@
    Quelpa has some usefulness over the default package.el. For one we can now easially use dependencies which do not exist on elpa or melpa and pull directly from git repos etc. Quelpa also allows you to upgrade all these packages on startup. In most cases we will be simply pulling from melpa and using qualpa for the upgrade functionality.
 
    At this point quelpa was bootstrapped in init.el.
-   Allow Quelpa to upgrade all packages on startup.
-   #+begin_src emacs-lisp
-     (setq quelpa-upgrade-p t)
-   #+end_src
 
    Add quelpa-use-package so that we can use quelpa in conjunction with use-package.
    #+begin_src emacs-lisp
