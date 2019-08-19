@@ -7,6 +7,11 @@
 
    At this point quelpa was bootstrapped in init.el.
 
+   We only want quelpa to upgrade packages to stable if available
+   #+begin_src emacs-lisp
+     (setq quelpa-stable-p t)
+   #+end_src
+
    Add quelpa-use-package so that we can use quelpa in conjunction with use-package.
    #+begin_src emacs-lisp
      (quelpa
