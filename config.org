@@ -218,12 +218,6 @@
 	       nyan-wavy-trail t)
 	 (nyan-mode))
      #+end_src
-**** Zone
-     Make the screen freak out after 5min. Can freak onlookers out.
-     #+begin_src emacs-lisp
-       (require 'zone)
-       (zone-when-idle 300)
-     #+end_src
 *** Global Packages
     These packages are enabled everywhere
 
