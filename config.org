@@ -686,3 +686,11 @@
 	:bind (("C-c d d" . docker)
 	       ("C-c d c" . docker-compose)))
     #+end_src
+*** Terraform
+    #+begin_src emacs-lisp
+      (use-package terraform-mode
+	:quelpa)
+
+      (use-package company-terraform
+	:quelpa)
+    #+end_src
