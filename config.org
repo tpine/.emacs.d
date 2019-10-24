@@ -460,6 +460,8 @@
        (interactive)
        (find-file "~/org/work.org"))
 
+     (use-package ob-http
+       :ensure t)
 
      (use-package org
        :ensure org-plus-contrib
@@ -478,7 +480,8 @@
 	    (lisp . t)
 	    (latex . t)
 	    (php . t)
-	    (js . t)))
+	    (js . t)
+	    (http . t)))
 	 (setq org-babel-lisp-eval-fn "sly-eval"
 	       org-src-window-setup 'current-window)
 	 (require 'org-notmuch)
