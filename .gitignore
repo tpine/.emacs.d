@@ -4,3 +4,7 @@ elpa/
 quelpa/
 forge-database.sqlite
 transient/
+tramp
+url/
+session*
+\#\!*\#
