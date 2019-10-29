@@ -183,7 +183,7 @@
 		 doom-themes-enable-italic t
 		 doom-vibrant-brighter-modeline nil
 		 org-hide-leading-stars nil) ; if nil, italics is universally disabled
-	   (load-theme 'doom-vibrant t)
+	   (load-theme 'doom-gruvbox t)
 	   ;; Enable flashing mode-line on errors
 	   (doom-themes-visual-bell-config)
 	   ;; Corrects (and improves) org-mode's native fontification.
