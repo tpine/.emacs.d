@@ -390,6 +390,19 @@
 	 (use-package smartparens-config)
 	 (smartparens-global-mode 1))
      #+end_src
+**** Dired
+     #+begin_src emacs-lisp
+       (use-package diredfl
+	 :quelpa
+	 :init
+	 (diredfl-global-mode))
+
+       (use-package dired-narrow
+	 :quelpa
+	 :config
+	 (bind-keys :map dired-mode-map
+		    ("f" . dired-narrow-fuzzy)))
+     #+end_src
 *** Enable Functions
     #+begin_src emacs-lisp
       (put 'downcase-region 'disabled nil)
