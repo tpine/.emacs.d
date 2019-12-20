@@ -566,7 +566,8 @@
 	:mode (("\\.ctp$" . web-mode)
 	       ("\\.html$" . web-mode)
 	       ("\\.twig$" . web-mode)
-	       ("\\.styl$" . web-mode))
+	       ("\\.styl$" . web-mode)
+	       ("\\.hbs$" . web-mode))
 	:hook ((web-mode . (lambda ()
 			      (setq web-mode-enable-auto-pairing nil))))
 	:init
