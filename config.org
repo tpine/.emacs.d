@@ -621,6 +621,10 @@
 *** Javascript
     Use JS2 Mode for all javascript files
     #+begin_src emacs-lisp
+      (use-package add-node-modules-path
+	:quelpa)
+      (use-package prettier-js
+	:quelpa)
       (use-package js2-mode
 	:quelpa
 	:mode ("\\.js\\'" . js2-mode) 
@@ -629,7 +633,9 @@
 	       ("C-c t" . swap-quotes-to-template))
 	:hook ((js2-mode . company-mode)
 	       (js2-mode . rainbow-delimiters-mode)
-	       (js2-mode . (lambda () (setq indent-tabs-mode nil))))
+	       (js2-mode . (lambda () (setq indent-tabs-mode nil)))
+	       (js2-mode . prettier-js-mode)
+	       (js2-mode . add-node-modules-path))
 	:config (setq js2f-mode-show-parse-errors nil
 		      js2-mode-show-strict-warnings nil
 		      flycheck-javascript-standard-executable "semistandard"))
