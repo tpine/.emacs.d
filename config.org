@@ -726,3 +726,11 @@
       (use-package company-terraform
 	:quelpa)
     #+end_src
+*** Yaml
+    So much Devops Tooling uses the worst markup language in the world.
+
+    YAML...
+    #+begin_src emacs-lisp
+      (use-package yaml-mode
+	:quelpa)
+    #+end_src
