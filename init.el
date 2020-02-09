@@ -33,11 +33,13 @@
 ;;; Bootstrap quelpa
 ;; Install quelpa if it's not already installed.
 ;; quelpa is used to configure the rest of the packages.
-(if (require 'quelpa nil t)
-    (quelpa-self-upgrade)
-  (with-temp-buffer
-    (url-insert-file-contents "https://framagit.org/steckerhalter/quelpa/raw/master/bootstrap.el")
-    (eval-buffer)))
+(defun internet-up-p (&optional host)
+  (= 0 (call-process "ping" nil nil nil "-c" "1" "-W" "1" 
+		     (if host host "www.google.com"))))
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
 
 ;;; Load the config
 (org-babel-load-file (expand-file-name (concat user-emacs-directory "config.org")))
