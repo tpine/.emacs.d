@@ -188,18 +188,6 @@
 
      #+RESULTS:
      
-     The UI Can be finnicky with setting the theme when launched in a GUI emacsclient and uses the terminal theme.
-     We don't want this
-     #+begin_src emacs-lisp
-       (add-hook 'after-make-frame-functions (lambda (frame)
-					       (when (display-graphic-p frame)
-						 (enable-theme 'doom-vibrant)
-						 (load-theme 'doom-vibrant))))
-     #+end_src
-
-     #+RESULTS:
-     | (lambda (frame) (when (display-graphic-p frame) (enable-theme (quote doom-vibrant)) (load-theme (quote doom-vibrant)))) | x-dnd-init-frame |
-
 **** Nyan Mode
      Nyan Cat tells us how far we are through the file.
      This uses some deprecated functions. We should fix this at some point.
