@@ -491,6 +491,14 @@
 	       org-todo-keywords '((sequence "TODO" "|" "DONE" "CANCELED"))
 	       org-enforce-todo-dependencies t
 	       org-default-notes-file "~/org/global.org")))
+
+     (use-package org-journal
+       :ensure t
+       :custom
+       (org-journal-file-type "daily")
+       (org-journal-dir "~/org/journal/")
+       :bind
+       (("C-c C-j" . org-journal-new-entry)))
    #+end_src
 
 *** RSS
