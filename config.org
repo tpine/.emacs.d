@@ -701,6 +701,9 @@
 	:ensure t
 	:bind (("C-c d d" . docker)
 	       ("C-c d c" . docker-compose)))
+
+      (use-package dockerfile-mode
+	:ensure t)
     #+end_src
 *** Terraform
     #+begin_src emacs-lisp
