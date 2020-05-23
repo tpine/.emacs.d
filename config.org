@@ -614,7 +614,8 @@
       (use-package add-node-modules-path
 	:ensure t)
       (use-package prettier-js
-	:ensure t)
+	:ensure t
+	:hook ((json-mode . prettier-js-mode)))
       (use-package js2-mode
 	:ensure t
 	:mode ("\\.js\\'" . js2-mode) 
