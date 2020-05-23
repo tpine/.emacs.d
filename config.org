@@ -39,11 +39,6 @@
       (setq ispell-dictionary "english")
     #+end_src
    
-    Set explicit-shell-file-name so that docker can connect to bare images. Ill find a better way of fixing this later.
-    #+begin_src emacs-lisp
-      (setq explicit-shell-file-name "/bin/sh")
-    #+end_src
-   
 *** The Node issue
     Node doesn't have a good history of dealing with autosave and backup files.
     If we set this to exist within the emacs config directory we can fix this.
