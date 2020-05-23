@@ -234,7 +234,8 @@
      #+begin_src emacs-lisp
        (use-package company
 	 ;; We do not add backends here do that on a per package basis
-	 :ensure t)
+	 :ensure t
+	 :hook ((after-init . global-company-mode)))
      #+end_src
 
 **** Magit
