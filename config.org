@@ -713,8 +713,14 @@
     #+end_src
 *** Terraform
     #+begin_src emacs-lisp
+      (defun terraform-fmt-on-save ()
+	(when (eq major-mode 'terraform-mode)
+	  (terraform-format-buffer)))
+
       (use-package terraform-mode
-	:ensure t)
+	:ensure t
+	:hook ((terraform-mode . (lambda () (add-hook 'before-save-hook 'terraform-fmt-on-save nil 'local)))
+	       (terraform-mode . rainbow-delimiters-mode)))
 
       (use-package company-terraform
 	:ensure t)
