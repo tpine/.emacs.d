@@ -274,7 +274,9 @@
 	 :hook ((emacs-lisp-mode . rainbow-delimiters-mode)
 		(lisp-mode . rainbow-delimiters-mode)
 		(sly-mrepl-mode . rainbow-delimiters-mode)
-		(php-mode . rainbow-delimiters-mode)))
+		(php-mode . rainbow-delimiters-mode)
+		(js2-mode . rainbow-delimiters-mode)
+		(json-mode . rainbow-delimiters-mode)))
      #+end_src
 
 **** Move Text
