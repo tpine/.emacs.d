@@ -495,32 +495,44 @@
 	       org-src-window-setup 'current-window)
 	 (require 'ol-notmuch)
 	 ;; General Org Config
-	 (setq org-agenda-files (list "~/org/home.org" "~/org/work.org" "~/org/time-tracked.org")
+	 (setq org-agenda-files (list "~/org/home.org" "~/org/work.org" "~/org/journal/")
 	       org-refile-targets '((org-agenda-files :maxlevel . 3))
 	       org-todo-keywords '((sequence "TODO" "|" "DONE" "CANCELED"))
 	       org-enforce-todo-dependencies t
 	       org-default-notes-file "~/org/global.org")))
 
+
+     (defun goto-journal-or-new-file ()
+       (if (file-exists-p (org-journal-get-entry-path))
+	   (org-journal-open-current-journal-file)
+	 (org-journal-new-entry nil)))
+
      (use-package org-journal
        :ensure t
-       :custom
-       (org-journal-file-type "daily")
-       (org-journal-dir "~/org/journal/")
-       :bind
-       (("C-c C-j" . org-journal-new-entry)))
+       :defer t
+       :init
+       (global-set-key (kbd "C-c j") (lambda () (interactive) (goto-journal-or-new-file)))
+       :config
+       (setq org-journal-dir "~/org/journal/"))
    #+end_src
-
+   
 *** RSS
     Use elfeed for RSS through org mode
     #+begin_src emacs-lisp
-      (use-package elfeed
+      (use-package elfeed-protocol
 	:ensure t)
 
-      (use-package elfeed-org
+      (use-package elfeed
 	:ensure t
 	:init
-	(elfeed-org)
-	(setq rmh-elfeed-org-files (list "~/org/feeds.org")))
+	;; curl recommend
+	(setq elfeed-use-curl t)
+	(elfeed-set-timeout 36000)
+	(setq elfeed-curl-extra-arguments '("--insecure")) ;necessary for https without a trust certificate
+	(setq elfeed-feeds '(("owncloud+https://thomas@192.168.0.101"
+			      :password "6bCcX5QvbGpvRaoyuMDnHZowzSW")))
+	(elfeed-protocol-enable))
+
     #+end_src
 
 ** Email
