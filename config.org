@@ -557,6 +557,7 @@
 
      (use-package notmuch
        :ensure t
+       :bind (("C-c n" . notmuch))
        :config
        (setq notmuch-search-oldest-first nil
 	     mail-specify-envelope-from t
