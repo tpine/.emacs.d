@@ -623,9 +623,6 @@
 
       (use-package php-mode
 	:ensure t
-	:bind
-	(("C-c w" . web-mode)
-	 ("C-c j" . js2-mode))
 	:init
 	(progn
 	   (ac-php-core-eldoc-setup)
