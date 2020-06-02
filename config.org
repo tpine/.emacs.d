@@ -113,88 +113,6 @@
 	(interactive)
 	(ansi-color-apply-on-region (point-min) (point-max)))
     #+end_src
-*** User Interface
-    Disable all excess UI elements.
-    #+begin_src emacs-lisp
-      (global-display-line-numbers-mode)
-      (setq column-number-mode t)
-      (tool-bar-mode -1)
-      (menu-bar-mode -1)
-      (scroll-bar-mode -1)
-      (custom-set-variables '(custom-safe-themes t))
-    #+end_src
-
-    #+RESULTS:
-
-**** Startup
-     Disable startup screens and change the initial buffer choice.
-     We also set the *scratch-buffer* to org-mode
-     #+begin_src emacs-lisp
-       (setq inhibit-startup-screen t
-	     initial-major-mode 'org-mode
-	     initial-buffer-choice "~/org/global.org"
-	     initial-scratch-message "\
-       ,* Notes
-       - This is a initial scratch buffer
-       - Buffer is set to org mode
-       - Run snippetts like a iPython Notebook using org-bable
-
-       ")
-     #+end_src
-
-     #+RESULTS:
-     : * Notes
-     : - This is a initial scratch buffer
-     : - Buffer is set to org mode
-     : - Run snippetts like a iPython Notebook using org-bable
-     : 
-
-**** Diminish
-     Remove things from the mode line
-     #+begin_src emacs-lisp
-       (use-package diminish
-	 :ensure t)
-     #+end_src
-    
-     abbrev-mode is everywhere. DISABLE.
-     #+begin_src emacs-lisp
-      (diminish 'abbrev-mode)
-     #+end_src
-**** Doom Themes
-     General User Interface
-     #+begin_src emacs-lisp
-       (use-package doom-themes
-	 :ensure t
-	 :init
-	 (progn 
-	   (require 'doom-themes)
-
-	   ;; Global settings (defaults)
-	   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-		 doom-themes-enable-italic t
-		 doom-vibrant-brighter-modeline nil
-		 org-hide-leading-stars nil) ; if nil, italics is universally disabled
-	   (load-theme 'doom-gruvbox t)
-	   ;; Enable flashing mode-line on errors
-	   (doom-themes-visual-bell-config)
-	   ;; Corrects (and improves) org-mode's native fontification.
-	   (doom-themes-org-config)))
-     #+end_src
-
-     #+RESULTS:
-     
-**** Nyan Mode
-     Nyan Cat tells us how far we are through the file.
-     This uses some deprecated functions. We should fix this at some point.
-     #+begin_src emacs-lisp
-       (use-package nyan-mode
-	 :ensure t
-	 :init
-	 ;; Fix up Nyan Cat cause she's pretty
-	 (setq nyan-animate-nyancat t
-	       nyan-wavy-trail t)
-	 (nyan-mode))
-     #+end_src
 *** Global Packages
     These packages are enabled everywhere
 
@@ -758,3 +676,90 @@
       (use-package yaml-mode
 	:ensure t)
     #+end_src
+** User Interface
+   This is last so that it takes precedence over any changes other packages do.
+
+   Disable all excess UI elements.
+   #+begin_src emacs-lisp
+     (global-display-line-numbers-mode)
+     (setq column-number-mode t)
+     (tool-bar-mode -1)
+     (menu-bar-mode -1)
+     (scroll-bar-mode -1)
+     (custom-set-variables '(custom-safe-themes t))
+   #+end_src
+
+*** Startup
+    Disable startup screens and change the initial buffer choice.
+    We also set the *scratch-buffer* to org-mode
+    #+begin_src emacs-lisp
+
+      (setq inhibit-startup-screen t
+	    initial-major-mode 'org-mode
+	    initial-buffer-choice nil
+	    initial-scratch-message "\
+      ,* Notes
+      - This is a initial scratch buffer
+      - Buffer is set to org mode
+      - Run snippetts like a iPython Notebook using org-bable
+
+      ")
+
+      (defun new-journal-entry ()
+	(condition-case ex
+	    (org-journal-new-entry nil)
+	  ('error
+	   (message (format "Caught exception: [%s]" ex)))))
+
+      (elfeed)
+      (org-journal-open-current-journal-file)
+      (elfeed-update-feed "owncloud+https://thomas:6bCcX5QvbGpvRaoyuMDnHZowzSW@192.168.0.101")
+    #+end_src
+
+*** Diminish
+    Remove things from the mode line
+    #+begin_src emacs-lisp
+      (use-package diminish
+	:ensure t)
+    #+end_src
+    
+    abbrev-mode is everywhere. DISABLE.
+    #+begin_src emacs-lisp
+     (diminish 'abbrev-mode)
+    #+end_src
+*** Doom Themes
+    General User Interface
+    #+begin_src emacs-lisp
+      (use-package doom-themes
+	:ensure t
+	:init
+	(progn 
+	  (require 'doom-themes)
+
+	  ;; Global settings (defaults)
+	  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+		doom-themes-enable-italic t
+		doom-vibrant-brighter-modeline nil
+		org-hide-leading-stars nil) ; if nil, italics is universally disabled
+	  (load-theme 'doom-gruvbox t)
+	  ;; Enable flashing mode-line on errors
+	  (doom-themes-visual-bell-config)
+	  ;; Corrects (and improves) org-mode's native fontification.
+	  (doom-themes-org-config)))
+    #+end_src
+
+    #+RESULTS:
+     
+*** Nyan Mode
+    Nyan Cat tells us how far we are through the file.
+    This uses some deprecated functions. We should fix this at some point.
+    #+begin_src emacs-lisp
+      (use-package nyan-mode
+	:ensure t
+	:init
+	;; Fix up Nyan Cat cause she's pretty
+	(setq nyan-animate-nyancat t
+	      nyan-wavy-trail t)
+	(nyan-mode))
+    #+end_src
+    
