@@ -512,14 +512,6 @@
 	  (sp-local-pair 'web-mode "<" nil :when '(sp-web-mode-is-code-context))))
     #+end_src
     
-    Company is our general completion framework
-    #+begin_src emacs-lisp
-      (use-package company-tern
-	:ensure t
-	:init
-	(add-to-list 'company-backends 'company-tern))
-    #+end_src
-
     Increasingly we use binarys which are found within the node_modules/ folder for individual projects.
     add-node-modules-path searches for node_modules/ when within some modes
     #+begin_src emacs-lisp
