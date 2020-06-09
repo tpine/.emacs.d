@@ -642,6 +642,9 @@
 
       (use-package dockerfile-mode
 	:ensure t)
+
+      (use-package docker-compose-mode
+	:ensure t)
     #+end_src
 *** Terraform
     #+begin_src emacs-lisp
