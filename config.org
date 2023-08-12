@@ -309,17 +309,6 @@
       (put 'erase-buffer 'disabled nil)
       (put 'upcase-region 'disabled nil)
     #+end_src
-** C#
-   #+begin_src emacs-lisp
-     (use-package omnisharp
-       :ensure t
-       :hook ((csharp-mode . omnisharp-mode))
-       :init
-       (add-to-list 'company-backends 'company-omnisharp))
-
-     (use-package csproj-mode
-       :ensure t)
-   #+end_src
 ** Lisp
 *** General
     Add .lsp file to lisp-mode
