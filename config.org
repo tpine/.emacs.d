@@ -610,10 +610,6 @@
 	   (make-local-variable 'company-backends)
 	   (add-to-list 'company-backends 'company-ac-php-backend)
 	   (add-hook 'php-mode-hook (lambda () (setq indent-tabs-mode nil)))))
-
-      (use-package phpcbf
-	:ensure t
-	:hook ((php-mode . phpcbf-enable-on-save)))
     #+end_src
 *** CSS
     If styleint exists use it for css checking.
