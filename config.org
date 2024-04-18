@@ -290,6 +290,27 @@
 	 (use-package smartparens-config)
 	 (smartparens-global-mode 1))
      #+end_src
+**** Tree-Sitter
+     Set Treesitter modes to be used instead of the font-lock modes
+     #+begin_src emacs-lisp
+       (setq major-mode-remap-alist
+	'((yaml-mode . yaml-ts-mode)
+	  (bash-mode . bash-ts-mode)
+	  (js2-mode . js-ts-mode)
+	  (typescript-mode . typescript-ts-mode)
+	  (json-mode . json-ts-mode)
+	  (css-mode . css-ts-mode)
+	  (python-mode . python-ts-mode)
+	  (rust-mode . rust-ts-mode)))
+     #+end_src
+
+**** Eglot
+     #+begin_src emacs-lisp
+       (use-package eglot
+	 :hook (c-mode . eglot-ensure))
+     #+end_src
+(use-package company
+  :hook (prog-mode . company-mode))
 **** Dired
      #+begin_src emacs-lisp
        (use-package diredfl
@@ -376,11 +397,8 @@
        (interactive)
        (find-file "~/org/work.org"))
 
-     (use-package ob-http
-       :ensure t)
-
      (use-package org
-       :ensure org-plus-contrib
+       :ensure org
        :bind (("C-c c" . org-capture)
 	      ("C-c !" . org-time-stamp-inactive)
 	      ("C-c o" . open-work-org-file))
@@ -395,12 +413,10 @@
 	    (shell . t)
 	    (lisp . t)
 	    (latex . t)
-	    (php . t)
 	    (js . t)
 	    (http . t)))
 	 (setq org-babel-lisp-eval-fn "sly-eval"
 	       org-src-window-setup 'current-window)
-	 (require 'ol-notmuch)
 	 ;; General Org Config
 	 (setq org-agenda-files (list "~/org/home.org" "~/org/work.org" "~/org/journal/")
 	       org-refile-targets '((org-agenda-files :maxlevel . 3))
@@ -429,18 +445,26 @@
       (use-package elfeed-protocol
 	:ensure t)
 
-      (use-package elfeed
-	:ensure t
-	:init
-	;; curl recommend
-	(setq elfeed-use-curl t)
-	(elfeed-set-timeout 36000)
-	(setq elfeed-curl-extra-arguments '("--insecure")) ;necessary for https without a trust certificate
-	(setq elfeed-feeds '(("owncloud+https://thomas@192.168.0.101"
-			      :password "6bCcX5QvbGpvRaoyuMDnHZowzSW")))
-	(elfeed-protocol-enable))
+      ;; (use-package elfeed
+      ;;   :ensure t
+      ;;   :init
+      ;;   ;; curl recommend
+      ;;   (setq elfeed-use-curl t)
+      ;;   (elfeed-set-timeout 36000)
+      ;;   (setq elfeed-curl-extra-arguments '("--insecure")) ;necessary for https without a trust certificate
+      ;;   (setq elfeed-feeds '(("fever+http://admin@192.168.1.209:10091/"
+      ;; 			:api-url "192.168.1.209:10091/fever/"
+      ;; 			:password "changeme")))
+      ;;   (elfeed-protocol-enable))
 
     #+end_src
+
+** Rust
+  #+begin_src emacs-lisp
+    (use-package rust-mode
+      :ensure t
+      :config (setq rust-format-on-save t))
+  #+end_src
 
 ** Email
    Use notmuch for emails
@@ -482,60 +506,39 @@
 *** General
     Web Mode powers our general system interaction
     #+begin_src emacs-lisp
-      (use-package web-mode
-	:ensure t
-	:mode (("\\.ctp$" . web-mode)
-	       ("\\.html$" . web-mode)
-	       ("\\.twig$" . web-mode)
-	       ("\\.styl$" . web-mode)
-	       ("\\.hbs$" . web-mode))
-	:hook ((web-mode . (lambda ()
-			      (setq web-mode-enable-auto-pairing nil))))
-	:init
-	(progn
-	  (defun sp-web-mode-is-code-context (id action context)
-	    (and (eq action 'insert)
-		 (not (or (get-text-property (point) 'part-side)
-			  (get-text-property (point) 'block-side)))))
+	    (use-package web-mode
+	      :ensure t
+	      :mode (("\\.ctp$" . web-mode)
+		     ("\\.html$" . web-mode)
+		     ("\\.twig$" . web-mode)
+		     ("\\.styl$" . web-mode)
+		     ("\\.hbs$" . web-mode)
+		     ("\\.svelte$" . web-mode))
+	      :hook ((web-mode . (lambda ()
+				    (setq web-mode-enable-auto-pairing nil))))
+	      :init
+	      (progn
+		(defun sp-web-mode-is-code-context (id action context)
+		  (and (eq action 'insert)
+		       (not (or (get-text-property (point) 'part-side)
+				(get-text-property (point) 'block-side)))))
 
-	  (sp-local-pair 'web-mode "<" nil :when '(sp-web-mode-is-code-context))))
+		(sp-local-pair 'web-mode "<" nil :when '(sp-web-mode-is-code-context))))
     #+end_src
     
     Increasingly we use binarys which are found within the node_modules/ folder for individual projects.
     add-node-modules-path searches for node_modules/ when within some modes
     #+begin_src emacs-lisp
-      (use-package add-node-modules-path
-	:ensure t
-	:hook ((js-mode . #'add-node-modules-path)))
+      ;; (use-package add-node-modules-path
+      ;;   :ensure t
+      ;;   :hook ((js-mode . #'add-node-modules-path)))
     #+end_src
 
-*** Ruby
-    Ruby has a issue where the mode wants a running ruby console.
-    If that isn't found don't install ruby/
-    #+begin_src emacs-lisp
-      (if (executable-find "ruby")
-	  (progn
-	    (use-package enh-ruby-mode
-	      :ensure t
-	      :mode "\\.rb$")
-
-	    (use-package rvm
-	      :ensure t)
-
-	    (use-package robe
-	      :ensure t
-	      :hook enh-mode-hook
-	      :init
-	      (progn
-		(defadvice inf-ruby-console-auto (before activate-rvm-for-robe activate)
-		  (rvm-activate-corresponding-ruby)))
-	      :config (robe-start))))
-    #+end_src
 *** Javascript
     Use JS2 Mode for all javascript files
     #+begin_src emacs-lisp
-      (use-package add-node-modules-path
-	:ensure t)
+      ;; (use-package add-node-modules-path
+      ;;   :ensure t)
       (use-package prettier-js
 	:ensure t
 	:hook ((json-mode . prettier-js-mode)))
@@ -549,7 +552,8 @@
 	       (js2-mode . rainbow-delimiters-mode)
 	       (js2-mode . (lambda () (setq indent-tabs-mode nil)))
 	       (js2-mode . prettier-js-mode)
-	       (js2-mode . add-node-modules-path))
+	       ;; (js2-mode . add-node-modules-path)
+	       )
 	:config (setq js2f-mode-show-parse-errors nil
 		      js2-mode-show-strict-warnings nil
 		      flycheck-javascript-standard-executable "semistandard"))
@@ -573,28 +577,32 @@
 
 **** Typescript
      #+begin_src emacs-lisp
-       (use-package tide
-	 :ensure t
-	 :after (typescript-mode company flycheck)
-	 :mode (("\\.tsx$" . web-mode))
-	 :hook ((tide-mode . prettier-js-mode)
-		(tide-mode . add-node-modules-path))
-	 :bind (("C-c r" . tide-rename-symbol))
-	 :init
-	 (defun setup-tide-mode ()
-	   (interactive)
-	   (tide-setup)
-	   (flycheck-mode +1)
-	   (setq flycheck-check-syntax-automatically '(save mode-enabled))
-	   (rainbow-delimiters-mode)
-	   (eldoc-mode +1)
-	   (tide-hl-identifier-mode +1)
-	   (company-mode +1))
-	 :hook ((typescript-mode . setup-tide-mode)
-		(before-save . tide-format-before-save)
-		(web-mode . (lambda ()
-				   (when (string-equal "tsx" (file-name-extension buffer-file-name))
-				     (setup-tide-mode))))))
+       ;; (use-package tide
+       ;;   :ensure t
+       ;;   :after (typescript-mode company flycheck)
+       ;;   :mode (("\\.tsx$" . web-mode))
+       ;;   :hook ((tide-mode . prettier-js-mode)
+       ;; 	 (tide-mode . add-node-modules-path))
+       ;;   :bind (("C-c r" . tide-rename-symbol))
+       ;;   :init
+       ;;   (defun setup-tide-mode ()
+       ;;     (interactive)
+       ;;     (tide-setup)
+       ;;     (flycheck-mode +1)
+       ;;     (setq flycheck-check-syntax-automatically '(save mode-enabled))
+       ;;     (rainbow-delimiters-mode)
+       ;;     (eldoc-mode +1)
+       ;;     (tide-hl-identifier-mode +1)
+       ;;     (company-mode +1))
+       ;;   :hook ((typescript-mode . setup-tide-mode)
+       ;; 	 (before-save . tide-format-before-save)
+       ;; 	 (web-mode . (lambda ()
+       ;; 			    (when (string-equal "tsx" (file-name-extension buffer-file-name))
+       ;; 			      (setup-tide-mode))))))
+
+
+       (use-package typescript-ts-mode
+	 :mode "\\.ts$")
      #+end_src
 
 *** PHP
@@ -645,14 +653,7 @@
       (use-package company-terraform
 	:ensure t)
     #+end_src
-*** Yaml
-    So much Devops Tooling uses the worst markup language in the world.
 
-    YAML...
-    #+begin_src emacs-lisp
-      (use-package yaml-mode
-	:ensure t)
-    #+end_src
 ** User Interface
    This is last so that it takes precedence over any changes other packages do.
 
