@@ -1,5 +1,3 @@
-;;; init.el --- Summary
-
 ;;; Commentary:
 ;;; Entry Point for Emacs customization
 
@@ -26,19 +24,52 @@
              '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
 
-;;; Bootstrap quelpa
-;; Install quelpa if it's not already installed.
-;; quelpa is used to configure the rest of the packages.
 (defun internet-up-p (&optional host)
   (= 0 (call-process "ping" nil nil nil "-c" "1" "-W" "1" 
 		     (if host host "www.google.com"))))
 
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+;;; Themeing
+(use-package doom-themes
+  :ensure t
+  :init
+  (progn 
+    (require 'doom-themes)
 
-;;; Load the config
-(org-babel-load-file (expand-file-name (concat user-emacs-directory "config.org")))
+    ;; Global settings (defaults)
+    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+	  doom-themes-enable-italic t
+	  doom-vibrant-brighter-modeline nil
+	  org-hide-leading-stars nil) ; if nil, italics is universally disabled
+    (load-theme 'doom-gruvbox t)
+    ;; Enable flashing mode-line on errors
+    (doom-themes-visual-bell-config)
+    ;; Corrects (and improves) org-mode's native fontification.
+    (doom-themes-org-config)))
+
+(use-package nyan-mode
+  :ensure t
+  :init
+  ;; Fix up Nyan Cat cause she's pretty
+  (setq nyan-animate-nyancat t
+	nyan-wavy-trail t)
+  (nyan-mode))
+
+;;; Ivy and Consel
+(use-package ivy
+  :ensure t
+  :bind (("C-s" . swiper)
+	 ("C-S-s" . isearch-forward))
+  :diminish ivy-mode
+  :init (ivy-mode 1))
+
+(use-package counsel
+  :ensure t
+  :bind (("C-c g" . counsel-rg)))
+
+;;; Magit
+(use-package magit
+  :ensure t
+  :bind (("C-c m" . magit-status)))
 
 (provide 'init.el)
 ;;; init.el ends here
