@@ -99,5 +99,26 @@
   :ensure t
   :bind (("C-c m" . magit-status)))
 
+;;; Rust
+(use-package rustic
+  :ensure t
+  :config
+  (setq rustic-format-on-save t)
+  :custom
+  (rustic-analyzer-command '("rustup" "run" "stable" "rust-analyzer")))
+
+;;; Terraform
+(use-package terraform-mode
+  :ensure t)
+
+;;; Lsp-mode
+(use-package lsp-mode
+  :ensure t
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  (setq lsp-keymap-prefix "C-c l")
+  :hook ((terraform-mode . lsp))
+  :commands lsp)
+
 (provide 'init.el)
 ;;; init.el ends here
