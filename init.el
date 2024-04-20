@@ -62,6 +62,14 @@
   :hook (rustic-mode
 	 terraform-mode
 	 emacs-lisp-mode))
+
+;;; Undo-tree
+(use-package undo-tree
+  :ensure t
+  :diminish undo-tree-mode
+  :init
+  (global-undo-tree-mode))
+
 ;;; Ivy and Consel
 (use-package ivy
   :ensure t
