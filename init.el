@@ -56,6 +56,12 @@
 	nyan-wavy-trail t)
   (nyan-mode))
 
+;;; Rainbow Delimeters
+(use-package rainbow-delimiters
+  :ensure t
+  :hook (rustic-mode
+	 terraform-mode
+	 emacs-lisp-mode))
 ;;; Ivy and Consel
 (use-package ivy
   :ensure t
