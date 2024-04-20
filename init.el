@@ -10,6 +10,8 @@
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (tooltip-mode -1))
+;; Add Line numbers onto a sidebar
+(global-display-line-numbers-mode)
 
 (setq inhibit-startup-message t)
 (setq initial-scratch-message "")
