@@ -82,6 +82,18 @@
   :ensure t
   :bind (("C-c g" . counsel-rg)))
 
+;;; SmartParens
+(use-package smartparens-mode
+  :ensure smartparens  ;; install the package
+  :hook (prog-mode
+	 text-mode
+	 markdown-mode
+	 rustic-mode
+	 terraform-mode) ;; add `smartparens-mode` to these hooks
+  :config
+  ;; load default config
+  (require 'smartparens-config))
+
 ;;; Magit
 (use-package magit
   :ensure t
