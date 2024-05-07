@@ -13,6 +13,18 @@
 ;; Add Line numbers onto a sidebar
 (global-display-line-numbers-mode)
 
+;; Backup File Directory
+(let ((backup-dir "~/tmp/emacs/backups")
+      (auto-saves-dir "~/tmp/emacs/auto-saves/"))
+  (dolist (dir (list backup-dir auto-saves-dir))
+    (when (not (file-directory-p dir))
+      (make-directory dir t)))
+  (setq backup-directory-alist `(("." . ,backup-dir))
+        auto-save-file-name-transforms `((".*" ,auto-saves-dir t))
+        auto-save-list-file-prefix (concat auto-saves-dir ".saves-")
+        tramp-backup-directory-alist `((".*" . ,backup-dir))
+        tramp-auto-save-directory auto-saves-dir))
+
 (setq inhibit-startup-message t)
 (setq initial-scratch-message "")
 
@@ -63,12 +75,25 @@
 	 terraform-mode
 	 emacs-lisp-mode))
 
+;;; Dired
+(use-package dired-narrow
+  :ensure t
+  :config
+  (bind-keys :map dired-mode-map
+	     ("f" . dired-narrow-fuzzy)))
+
 ;;; Undo-tree
 (use-package undo-tree
   :ensure t
   :diminish undo-tree-mode
   :init
   (global-undo-tree-mode))
+
+;;; Expand Region
+(use-package expand-region
+  :ensure t
+  :bind (("C-=" . er/expand-region)
+	 ("C--" . er/contract-region)))
 
 ;;; Ivy and Consel
 (use-package ivy
@@ -90,6 +115,7 @@
 	 markdown-mode
 	 rustic-mode
 	 terraform-mode) ;; add `smartparens-mode` to these hooks
+  :bind ("C-<left>" . sp-forward-slurp-sexp)
   :config
   ;; load default config
   (require 'smartparens-config))
@@ -111,14 +137,38 @@
 (use-package terraform-mode
   :ensure t)
 
+;;; web-mode
+(use-package web-mode
+  :ensure t
+  :mode (".svelte$"))
+
+;;; yaml
+(use-package yaml-ts-mode
+  :mode ("\\.yml\\'" "\\.yaml\\'"))
+
+;;; Prettier
+(use-package prettier-js
+  :ensure t
+  :mode (("\\.tsx\\'" . prettier-js-mode)
+	 ("\\.json\\'" . prettier-js-mode)))
+
+(use-package tsx-ts-mode
+  :mode "\\.tsx\\'")
+
 ;;; Lsp-mode
 (use-package lsp-mode
   :ensure t
   :init
   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
   (setq lsp-keymap-prefix "C-c l")
-  :hook ((terraform-mode . lsp))
+  :hook ((terraform-mode . lsp)
+	 (tsx-ts-mode . lsp))
+  :magic (".svelte$" . lsp)
   :commands lsp)
+
+(use-package lsp-ui
+  :ensure t)
 
 (provide 'init.el)
 ;;; init.el ends here
+(put 'upcase-region 'disabled nil)
