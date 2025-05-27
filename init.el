@@ -88,9 +88,13 @@
 ;;; Rainbow Delimeters
 (use-package rainbow-delimiters
   :ensure t
-  :hook (rustic-mode
-	 terraform-mode
-	 emacs-lisp-mode))
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+;;; Rainbow Delimeters
+(use-package indent-bars
+  :ensure t
+  :hook ((yaml-mode
+	 python-mode) . indent-bars-mode))
 
 ;;; Dired
 (use-package dired-narrow
