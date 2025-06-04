@@ -85,16 +85,61 @@
 	nyan-wavy-trail t)
   (nyan-mode))
 
+
 ;;; Rainbow Delimeters
 (use-package rainbow-delimiters
   :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
 
-;;; Rainbow Delimeters
+(use-package guix
+  :ensure t ; Install 'guix' package if not already
+  :config
+  ;; Assuming Guix is installed and its environment variables are set up
+  ;; (e.g., through your shell's .profile or Guix Home configuration)
+  ;; This ensures Emacs-Guix can find Guile modules and Guix commands.
+
+  ;; Optional: If you want to use Emacs-Guix for developing Guix itself
+  ;; and have a Guix source checkout, similar to the 'geiser-guile' example.
+  ;; Replace "~/src/guix" with the actual path to your Guix source.
+  (setq guix-load-path "~/src/guix") ; For Guile modules
+
+  ;; Auto-prettify store file names (e.g., /gnu/store/hash-package-version -> /gnu/store/...-package-version)
+  ;;(guix-prettify-store-paths-mode 1)
+
+  ;; Keybindings (optional, often M-x guix is enough to get to the popup)
+  (global-set-key (kbd "C-c p") 'guix) ; Example global binding
+
+  ;; You might want to enable `guix-devel-mode` for .scm files
+  ;; to get better Guix-specific features when editing package definitions.
+  (add-hook 'scheme-mode-hook (lambda ()
+                                (when (string-match-p "\\.scm\\'" (buffer-file-name))
+                                  (guix-devel-mode 1))))
+
+  ;; If you're using Guix Home and want to edit your home configuration,
+  ;; you might add its path here as well for Geiser/Guix development mode.
+  ;; (add-to-list 'geiser-guile-load-path "~/.config/guix/current/share")
+  ;; (add-to-list 'geiser-guile-load-path "~/my-guix-home-config-repo")
+  )
+
+(use-package geiser
+  :ensure t
+  :custom
+  (geiser-default-implementation 'guile)
+  (geiser-active-implementations '(guile))
+  (geiser-implementations-alist '(((regexp "\\.scm$") guile)))
+  :hook
+  (scheme-mode . geiser-mode))
+
+(use-package geiser-guile
+  :ensure t ; Install geiser-guile if it's not already
+  :config
+  ;; Assuming the Guix checkout is in ~/src/guix.
+  (add-to-list 'geiser-guile-load-path "~/src/guix"))
+
 (use-package indent-bars
   :ensure t
-  :hook ((yaml-mode
-	 python-mode) . indent-bars-mode))
+  :hook ((yaml-mode . indent-bars-mode)
+	 (python-mode . indent-bars-mode)))
 
 ;;; Dired
 (use-package dired-narrow
@@ -190,6 +235,11 @@
 (use-package lsp-ui
   :ensure t)
 
+(use-package devcontainer
+  :ensure t
+  :straight (devcontainer :type git :host github :repo "johannes-mueller/devcontainer.el"))
+
 (provide 'init.el)
 ;;; init.el ends here
 (put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
