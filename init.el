@@ -13,11 +13,12 @@
 ;; Add Line numbers onto a sidebar
 (global-display-line-numbers-mode)
 
-;; Backup File Directory
-(let ((backup-dir "~/tmp/emacs/backups")
-      (auto-saves-dir "~/tmp/emacs/auto-saves/"))
+;; Backup and autosave directories
+(let* ((temp-dir (or (getenv "TMPDIR") temporary-file-directory))
+       (backup-dir (expand-file-name "emacs/backups/" temp-dir))
+       (auto-saves-dir (expand-file-name "emacs/auto-saves/" temp-dir)))
   (dolist (dir (list backup-dir auto-saves-dir))
-    (when (not (file-directory-p dir))
+    (unless (file-directory-p dir)
       (make-directory dir t)))
   (setq backup-directory-alist `(("." . ,backup-dir))
         auto-save-file-name-transforms `((".*" ,auto-saves-dir t))
@@ -153,6 +154,11 @@
   :ensure t
   :diminish undo-tree-mode
   :init
+  (let ((undo-dir (expand-file-name "undo-tree/" (xdg-cache-home))))
+    (unless (file-directory-p undo-dir)
+      (make-directory undo-dir t))
+    (setq undo-tree-history-directory-alist `((".*" . ,undo-dir))
+          undo-tree-auto-save-history t))
   (global-undo-tree-mode))
 
 ;;; Expand Region
